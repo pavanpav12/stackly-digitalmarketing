@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stackly Bank</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:#f4f7fb;overflow-x:hidden;}
+
+/* ===== TOPBAR ===== */
+
+#stackly-loader{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100vh;
+background:#020617;
+display:flex;
+align-items:center;
+justify-content:center;
+z-index:99999;
+transition:opacity .3s ease, visibility .3s ease;
+}
+
+/* center box */
+#stackly-loader-box{
+text-align:center;
+color:#fff;
+}
+
+/* logo */
+#stackly-loader-logo{
+font-size:42px;
+font-weight:700;
+letter-spacing:4px;
+color:#22c55e;
+margin-bottom:6px;
+}
+
+#stackly-loader-sub{
+font-size:14px;
+opacity:.7;
+margin-bottom:35px;
+}
+
+/* bars */
+#stackly-loader-bars{
+display:flex;
+align-items:flex-end;
+justify-content:center;
+gap:8px;
+height:70px;
+margin-bottom:18px;
+}
+
+#stackly-bar1,
+#stackly-bar2,
+#stackly-bar3,
+#stackly-bar4,
+#stackly-bar5{
+width:10px;
+background:#22c55e;
+border-radius:4px;
+animation:stacklyGrow 1s infinite ease-in-out;
+}
+
+/* animation delays */
+#stackly-bar1{animation-delay:0s;}
+#stackly-bar2{animation-delay:.15s;}
+#stackly-bar3{animation-delay:.3s;}
+#stackly-bar4{animation-delay:.45s;}
+#stackly-bar5{animation-delay:.6s;}
+
+@keyframes stacklyGrow{
+0%,100%{height:18px;}
+50%{height:68px;}
+}
+
+#stackly-loader-text{
+font-size:13px;
+letter-spacing:1px;
+opacity:.8;
+}
+.topbar{
+background:linear-gradient(90deg,#061a40,#0b2d6b);
+color:#fff;
+position:sticky;
+top:0;              /* IMPORTANT */
+z-index:1000;       /* above navbar */
+padding:7px 5%;
+display:flex;
+align-items:center;
+justify-content:space-between;
+flex-wrap:wrap;
+font-size:13px;
+height:38px;        /* FIXED HEIGHT (needed) */
+}
+
+/* ===== NAVBAR ===== */
+.navbar{
+background:#fff;
+height:70px;
+padding:0 5%;
+display:flex;
+align-items:center;
+justify-content:space-between;
+box-shadow:0 4px 18px rgba(0,0,0,.08);
+position:sticky;
+top:38px;           /* SAME as topbar height */
+z-index:999;
+}
+
+.top-left{display:flex;gap:18px;}
+.top-left i{color:#00e0ff;}
+
+.announcement{flex:1;overflow:hidden;margin:0 15px;}
+.ticker{white-space:nowrap;display:inline-block;animation:ticker 18s linear infinite;}
+@keyframes ticker{0%{transform:translateX(100%);}100%{transform:translateX(-100%);}}
+
+.top-right a{
+color:#fff;
+margin-left:12px;
+font-size:15px;
+transition:.3s;
+}
+.top-right a:hover{
+color:#00e0ff;
+transform:translateY(-3px) scale(1.15);
+}
+
+/* ===== NAVBAR ===== */
+
+/* logo */
+.logo{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:700;color:#0b2d6b;}
+.logo img{width:172px;height:auto;border-radius:50%;}
+
+/* nav */
+.nav-links{list-style:none;display:flex;gap:20px;align-items:center;}
+.nav-links a{
+text-decoration:none;color:#333;font-weight:500;padding:8px 14px;border-radius:20px;
+transition:.25s;
+}
+.nav-links a:hover{background:#eef4ff;color:#0b2d6b;}
+
+/* dropdown */
+.nav-links li{position:relative;}
+.dropdown{
+position:absolute;
+top:60px;
+left:0;
+background:#fff;
+box-shadow:0 12px 25px rgba(0,0,0,.12);
+border-radius:10px;
+overflow:hidden;
+max-height:0;
+transition:max-height .35s ease;
+}
+.dropdown a{display:block;padding:12px 14px;}
+.dropdown.open{max-height:300px;}
+
+.arrow{
+margin-left:6px;
+transition:.3s;
+}
+.arrow.rotate{transform:rotate(180deg);}
+
+/* buttons */
+.buttons{display:flex;gap:10px;}
+.buttons a{
+padding:8px 16px;
+border-radius:22px;
+font-weight:600;
+text-decoration:none;
+font-size:14px;
+}
+.download{background:linear-gradient(45deg,#00d4ff,#0b2d6b);color:#fff;}
+.login{background:#0b2d6b;color:#fff;}
+.contact{border:2px solid #0b2d6b;color:#0b2d6b;}
+
+/* hamburger */
+.hamburger{display:none;font-size:26px;cursor:pointer;color:#0b2d6b;}
+
+/* ===== MOBILE MENU ===== */
+.mobile-menu{
+position:fixed;
+top:0;
+left:-100%;
+width:100%;
+height:100%;
+background:#061a40;
+padding:90px 25px;
+transition:.45s ease;
+z-index:2000;
+overflow-y:auto;
+}
+.mobile-menu.active{left:0;}
+
+.close-btn{
+position:absolute;
+top:22px;
+right:25px;
+font-size:28px;
+color:#fff;
+cursor:pointer;
+}
+
+/* mobile links */
+.mobile-links a{
+display:flex;
+align-items:center;
+gap:14px;
+color:#fff;
+text-decoration:none;
+font-size:18px;
+padding:14px 8px;
+border-bottom:1px solid rgba(255,255,255,.15);
+}
+
+/* mobile dropdown */
+.mobile-dropdown{
+max-height:0;
+overflow:hidden;
+transition:max-height .35s ease;
+padding-left:35px;
+}
+.mobile-dropdown a{font-size:16px;padding:10px 0;color:#cfe3ff;}
+.mobile-dropdown.open{max-height:200px;}
+
+/* mobile buttons */
+.mobile-buttons{margin-top:18px;display:flex;flex-direction:column;gap:12px;}
+.mobile-buttons a{
+text-align:center;
+padding:12px;
+border-radius:25px;
+background:#0b2d6b;
+color:#fff;
+text-decoration:none;
+}
+.mobile-buttons a:first-child{background:linear-gradient(45deg,#00d4ff,#0b2d6b);}
+
+/* social animation */
+.mobile-social{
+display:flex;
+justify-content:center;
+gap:18px;
+margin-top:25px;
+padding-top:18px;
+border-top:1px solid rgba(255,255,255,.2);
+}
+.mobile-social a{
+color:#fff;
+font-size:22px;
+transition:.3s;
+}
+.mobile-social a:hover{transform:translateY(-5px) scale(1.2);color:#00e0ff;}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:950px){
+.nav-links,.buttons{display:none;}
+.hamburger{display:block;}
+.topbar{flex-direction:column;text-align:center;gap:5px;}
+.announcement{display:none;}
+}
+</style>
+</head>
+
+<body>
+<!-- STACKLY LOADER -->
+<div id="stackly-loader">
+  <div id="stackly-loader-box">
+
+    <div id="stackly-loader-logo">STACKLY</div>
+    <div id="stackly-loader-sub">Digital Marketing</div>
+
+    <div id="stackly-loader-bars">
+      <div id="stackly-bar1"></div>
+      <div id="stackly-bar2"></div>
+      <div id="stackly-bar3"></div>
+      <div id="stackly-bar4"></div>
+      <div id="stackly-bar5"></div>
+    </div>
+
+    <div id="stackly-loader-text">Optimizing SEO Campaigns...</div>
+
+  </div>
+</div>
+<!-- TOPBAR -->
+<div class="topbar">
+<div class="top-left">
+<span><i class="fa-solid fa-phone"></i> +91 98765 43210</span>
+<span><i class="fa-solid fa-envelope"></i> support@stacklydigital.com</span>
+</div>
+
+<div class="announcement">
+<div class="ticker">
+Stackly Digital Marketing helps businesses grow online through SEO, social media promotion, and targeted advertising.
+</div>
+</div>
+
+<div class="top-right">
+</div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+<div class="logo">
+<img src="stacklylogo (3).webp"> 
+</div>
+
+<ul class="nav-links">
+<li>
+<a href="index.html" onclick="toggleDesktopDropdown(event)">
+Home <i class="fa-solid fa-chevron-down arrow" id="deskArrow"></i>
+</a>
+<div class="dropdown" id="deskDropdown">
+    <a href="index.html">Home 1</a>
+<a href="home.html">Home 2</a>
+
+</div>
+</li>
+<li><a href="solution.html">Solutions</a></li>
+<li><a href="ourthinking.html">Our thinking</a></li>
+<li><a href="career.html">Career</a></li>
+<li><a href="Blog.html">Blog</a></li>
+<li><a href="contact1.html">Contact</a></li>
+
+</ul>
+
+<div class="buttons">
+
+<a href="login2.html" class="login">Login</a>
+<a href="ai.html" class="login">AI</a>
+
+
+
+</div>
+
+<div class="hamburger" onclick="openMenu()">
+<i class="fa-solid fa-bars"></i>
+</div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+<div class="close-btn" onclick="closeMenu()"><i class="fa-solid fa-xmark"></i></div>
+
+<div class="mobile-links">
+<a href="4041.html" onclick="toggleMobileDropdown(event)">
+<i class="fa-solid fa-house"></i> Home <i class="fa-solid fa-chevron-down arrow" id="mobArrow"></i>
+</a>
+
+<div class="mobile-dropdown" id="mobDropdown">
+<a href="index.html">Home 1</a>
+<a href="home.html">Home 2</a>
+
+</div>
+
+<a href="solution.html"><i class="fa-solid fa-credit-card"></i> Solutions</a>
+<a href="ourthinking.html"><i class="fa-solid fa-paper-plane"></i>Our thinking</a>
+<a href="career.html"><i class="fa-solid fa-hand-holding-dollar"></i> Career</a>
+<a href="Blog.html"><i class="fa-solid fa-paper-plane"></i> Blog</a>
+<a href="contact1.html"><i class="fa-solid fa-tags"></i> Contact</a>
+</div>
+
+<div class="mobile-buttons">
+<a href="4041.html">Download App</a>
+<a href="login2.html">Login</a>
+
+</div>
+
+<div class="mobile-social">
+<a href="4041.html"><i class="fab fa-facebook-f"></i></a>
+<a href="4041.html"><i class="fab fa-instagram"></i></a>
+<a href="4041.html"><i class="fab fa-x-twitter"></i></a>
+<a href="4041.html"><i class="fab fa-linkedin-in"></i></a>
+</div>
+</div>
+
+<script>
+const menu=document.getElementById("mobileMenu");
+
+function openMenu(){
+menu.classList.add("active");
+document.body.style.overflow="hidden";
+}
+function closeMenu(){
+menu.classList.remove("active");
+document.body.style.overflow="auto";
+}
+
+/* desktop dropdown */
+function toggleDesktopDropdown(e){
+e.preventDefault();
+document.getElementById("deskDropdown").classList.toggle("open");
+document.getElementById("deskArrow").classList.toggle("rotate");
+}
+
+/* mobile dropdown */
+function toggleMobileDropdown(e){
+e.preventDefault();
+document.getElementById("mobDropdown").classList.toggle("open");
+document.getElementById("mobArrow").classList.toggle("rotate");
+}
+</script>
+<script>
+
+/* STACKLY LOADER HIDE */
+window.addEventListener("load", function(){
+setTimeout(function(){
+let loader=document.getElementById("stackly-loader");
+loader.style.opacity="0";
+loader.style.visibility="hidden";
+document.body.style.overflow="auto";
+},1200);
+});
+
+</script>
+<style>
+
+/* ===== STACKLY UNIQUE VIDEO SECTION ===== */
+
+#stkVid_section{
+max-width:1200px;
+margin:80px auto;
+display:flex;
+align-items:center;
+gap:60px;
+padding:20px;
+background:#f3f4f6;
+}
+
+/* VIDEO CONTAINER */
+.stkVid_box{
+position:relative;
+width:55%;
+height:380px;
+border-radius:14px;
+overflow:hidden;
+cursor:pointer;
+background:#000;
+box-shadow:0 10px 30px rgba(0,0,0,.25);
+}
+
+.stkVid_box video{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+/* PLAY BUTTON */
+.stkVid_play{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:70px;
+height:70px;
+border-radius:50%;
+background:rgba(194, 16, 16, 0.9);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:28px;
+transition:.3s;
+pointer-events:none;
+}
+
+.stkVid_box.stkVid_playing .stkVid_play{
+opacity:0;
+}
+
+/* TEXT SIDE */
+.stkVid_text{
+width:45%;
+}
+
+.stkVid_text h2{
+font-size:40px;
+color:#081b4b;
+margin-bottom:18px;
+font-weight:700;
+}
+
+.stkVid_text p{
+line-height:1.7;
+color:#444;
+margin-bottom:25px;
+}
+
+/* BUTTON */
+.stkVid_btn{
+display:inline-block;
+background:#ff7a00;
+color:#fff;
+padding:14px 30px;
+border-radius:30px;
+text-decoration:none;
+font-weight:600;
+transition:.3s;
+}
+
+.stkVid_btn:hover{
+background:#000;
+}
+
+/* MOBILE */
+@media(max-width:900px){
+
+#stkVid_section{
+flex-direction:column;
+gap:30px;
+}
+
+.stkVid_box{
+width:100%;
+height:260px;
+}
+
+.stkVid_text{
+width:100%;
+text-align:center;
+}
+
+.stkVid_text h2{
+font-size:28px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<section id="stkVid_section">
+
+<!-- VIDEO -->
+<div class="stkVid_box" id="stkVid_container">
+
+<video id="stkVid_video" poster="bot.webp">
+<source src="209409_medium (1).mp4" type="video/mp4">
+</video>
+
+<div class="stkVid_play">▶</div>
+
+</div>
+
+<!-- TEXT -->
+<div class="stkVid_text">
+<h2>Stackly Digital Marketing AI</h2>
+
+<p>
+Stackly Digital Marketing helps businesses increase traffic, generate leads
+and improve online visibility through SEO, paid advertising and creative campaigns.
+We turn visitors into customers using data-driven marketing strategies.
+</p>
+
+<a href="4041.html" class="stkVid_btn">Explore Stackly Services</a>
+</div>
+
+</section>
+
+<script>
+
+const stkVideo=document.getElementById("stkVid_video");
+const stkContainer=document.getElementById("stkVid_container");
+
+stkContainer.addEventListener("click",function(){
+
+if(stkVideo.paused){
+stkVideo.play();
+stkContainer.classList.add("stkVid_playing");
+}else{
+stkVideo.pause();
+stkContainer.classList.remove("stkVid_playing");
+}
+
+});
+
+</script>
+
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+/* ===== BASIC PAGE ===== */
+body{
+margin:0;
+font-family:'Poppins',sans-serif;
+height:200vh; /* only to test scroll */
+background:#f4f7fb;
+}
+
+/* ===== FLOAT BUTTON ===== */
+#stackly-bot-btn{
+position:fixed;
+right:20px;
+bottom:20px;
+width:65px;
+height:65px;
+border-radius:50%;
+cursor:pointer;
+box-shadow:0 10px 30px rgba(0,0,0,.35);
+overflow:hidden;
+z-index:9999;
+}
+
+#stackly-bot-btn img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+/* ===== CHATBOX ===== */
+#stackly-chat{
+position:fixed;
+right:20px;
+bottom:95px;
+width:340px;
+height:500px;
+background:#fff;
+border-radius:16px;
+box-shadow:0 20px 60px rgba(0,0,0,.30);
+display:none;
+flex-direction:column;
+overflow:hidden;
+z-index:9999;
+}
+
+/* header */
+#stackly-header{
+background:#0b2d6b;
+color:#fff;
+padding:12px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+}
+
+#stackly-header-left{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+#stackly-header-left img{
+width:32px;
+height:32px;
+border-radius:50%;
+border:2px solid #22c55e;
+}
+
+/* messages */
+#stackly-messages{
+flex:1;
+padding:12px;
+overflow-y:auto;
+display:flex;
+flex-direction:column;
+gap:8px;
+}
+
+.stackly-user{
+background:#22c55e;
+color:#fff;
+padding:8px 12px;
+border-radius:14px;
+align-self:flex-end;
+max-width:80%;
+}
+
+.stackly-bot{
+background:#eef2ff;
+padding:8px 12px;
+border-radius:14px;
+max-width:80%;
+}
+
+/* quick questions */
+#stackly-quick{
+padding:10px;
+display:flex;
+flex-wrap:wrap;
+gap:6px;
+border-top:1px solid #eee;
+max-height:120px;
+overflow:auto;
+}
+
+#stackly-quick button{
+background:#f1f5f9;
+border:none;
+padding:6px 10px;
+border-radius:12px;
+font-size:12px;
+cursor:pointer;
+}
+
+/* input */
+#stackly-input{
+display:flex;
+border-top:1px solid #eee;
+}
+
+#stackly-text{
+flex:1;
+border:none;
+padding:12px;
+outline:none;
+}
+
+#stackly-send{
+background:#22c55e;
+border:none;
+color:#fff;
+padding:12px;
+cursor:pointer;
+}
+
+#stackly-mic{
+background:#0b2d6b;
+border:none;
+color:#fff;
+padding:12px;
+cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- FLOAT BUTTON -->
+<div id="stackly-bot-btn">
+<img src="bot.webp">
+</div>
+
+<!-- CHATBOX -->
+<div id="stackly-chat">
+
+<div id="stackly-header">
+<div id="stackly-header-left">
+<img src="bot.webp">
+<span>Stackly AI Assistant</span>
+</div>
+<span id="stackly-close" style="cursor:pointer;">✖</span>
+</div>
+
+<div id="stackly-messages"></div>
+
+<div id="stackly-quick">
+<button>What is SEO?</button>
+<button>Google Ads cost?</button>
+<button>Social media marketing?</button>
+<button>Lead generation?</button>
+<button>Website design?</button>
+<button>Contact Stackly</button>
+</div>
+
+<div id="stackly-input">
+<input id="stackly-text" placeholder="Ask or speak about digital marketing...">
+<button id="stackly-mic">🎤</button>
+<button id="stackly-send">➤</button>
+</div>
+
+</div>
+
+<script>
+
+/* open close */
+const btn=document.getElementById("stackly-bot-btn");
+const chat=document.getElementById("stackly-chat");
+btn.onclick=()=>chat.style.display="flex";
+document.getElementById("stackly-close").onclick=()=>chat.style.display="none";
+
+const messages=document.getElementById("stackly-messages");
+const input=document.getElementById("stackly-text");
+
+/* speaking voice */
+function speak(text){
+const speech=new SpeechSynthesisUtterance(text);
+speech.lang="en-US";
+speech.rate=1;
+speech.pitch=1;
+speechSynthesis.speak(speech);
+}
+
+/* replies */
+function reply(q){
+let a="Stackly helps grow your business online.";
+
+q=q.toLowerCase();
+
+if(q.includes("seo"))
+a="SEO helps your website rank on Google. We provide keyword research and backlinks.";
+else if(q.includes("ads"))
+a="Google Ads gives instant leads and traffic.";
+else if(q.includes("social"))
+a="We manage Instagram and Facebook marketing campaigns.";
+else if(q.includes("lead"))
+a="We generate high quality customer leads.";
+else if(q.includes("website"))
+a="We design fast mobile responsive websites.";
+else if(q.includes("contact"))
+a="You can contact Stackly via the contact page or WhatsApp.";
+
+let bot=document.createElement("div");
+bot.className="stackly-bot";
+bot.innerText=a;
+messages.appendChild(bot);
+messages.scrollTop=messages.scrollHeight;
+speak(a);
+}
+
+/* send */
+function send(){
+let text=input.value.trim();
+if(!text)return;
+
+let user=document.createElement("div");
+user.className="stackly-user";
+user.innerText=text;
+messages.appendChild(user);
+
+reply(text);
+input.value="";
+}
+
+document.getElementById("stackly-send").onclick=send;
+input.addEventListener("keypress",e=>{if(e.key==="Enter")send();});
+
+/* voice recognition */
+if('webkitSpeechRecognition' in window){
+const recognition=new webkitSpeechRecognition();
+recognition.lang="en-US";
+
+document.getElementById("stackly-mic").onclick=function(){
+recognition.start();
+};
+
+recognition.onresult=function(e){
+input.value=e.results[0][0].transcript;
+send();
+};
+}
+
+/* welcome message */
+window.onload=()=>{
+setTimeout(()=>{
+let bot=document.createElement("div");
+bot.className="stackly-bot";
+bot.innerText="Hello! welcome to stackly digital marketing website, I am Stackly AI assistant.and improve online visibility through SEO, paid advertising and creative campaigns. Ask me about SEO or digital marketing.";
+messages.appendChild(bot);
+speak(bot.innerText);
+},1000);
+};
+
+</script>
+
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* ===== UNIQUE WRAPPER ===== */
+#stk-maintenance{
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+background:linear-gradient(135deg,#050816,#0a0f2c,#050816);
+color:white;
+overflow:hidden;
+font-family:'Poppins',sans-serif;
+position:relative;
+}
+
+/* floating particles */
+#stk-maintenance::before{
+content:"";
+position:absolute;
+width:200%;
+height:200%;
+background-image:radial-gradient(rgba(0,255,255,.15) 1px, transparent 1px);
+background-size:40px 40px;
+animation:stkMove 25s linear infinite;
+}
+
+@keyframes stkMove{
+from{transform:translate(0,0);}
+to{transform:translate(-200px,-200px);}
+}
+
+/* container */
+#stk-maintenance .container{
+position:relative;
+text-align:center;
+padding:40px 25px;
+max-width:600px;
+}
+
+/* logo */
+#stk-maintenance .logo{
+width:110px;
+height:110px;
+margin:auto;
+border-radius:50%;
+background:linear-gradient(145deg,#00f7ff,#007bff);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:46px;
+font-weight:700;
+box-shadow:0 0 25px rgba(0,255,255,.6),
+           0 0 60px rgba(0,123,255,.4);
+margin-bottom:25px;
+}
+
+/* title */
+#stk-maintenance h1{
+font-size:42px;
+letter-spacing:2px;
+margin-bottom:10px;
+background:linear-gradient(90deg,#00f7ff,#7aa6ff,#00f7ff);
+-webkit-background-clip:text;
+color:transparent;
+animation:stkGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes stkGlow{
+from{filter:drop-shadow(0 0 5px #00f7ff);}
+to{filter:drop-shadow(0 0 20px #007bff);}
+}
+
+#stk-maintenance .subtitle{
+font-size:18px;
+opacity:.85;
+margin-bottom:25px;
+}
+
+#stk-maintenance .message{
+font-size:16px;
+line-height:1.7;
+opacity:.8;
+margin-bottom:30px;
+}
+
+#stk-maintenance .count{
+font-size:22px;
+font-weight:600;
+margin-top:10px;
+color:#00f7ff;
+}
+
+/* button */
+#stk-maintenance .btn{
+margin-top:30px;
+display:inline-block;
+padding:12px 28px;
+border-radius:30px;
+background:linear-gradient(90deg,#00f7ff,#007bff);
+color:#fff;
+text-decoration:none;
+font-weight:600;
+transition:.3s;
+}
+
+#stk-maintenance .btn:hover{
+transform:scale(1.08);
+box-shadow:0 0 18px #00f7ff;
+}
+
+/* mobile */
+@media(max-width:600px){
+#stk-maintenance h1{font-size:30px;}
+#stk-maintenance .subtitle{font-size:16px;}
+#stk-maintenance .logo{width:90px;height:90px;font-size:36px;}
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="stk-maintenance">
+
+<div class="container">
+
+<div class="logo">AI</div>
+
+<h1>STACKLY</h1>
+<div class="subtitle">Under Maintenance</div>
+
+<div class="message">
+Our AI system is currently upgrading to provide you smarter,
+faster and more secure digital services.
+<br><br>
+We will be back very soon.
+</div>
+
+<div class="count">
+Reloading in <span id="timer">60</span> seconds...
+</div>
+
+<a href="home.html" class="btn">Back to Home</a>
+
+</div>
+
+</div>
+
+<script>
+let time=60;
+let timer=document.getElementById("timer");
+
+setInterval(()=>{
+time--;
+timer.innerText=time;
+if(time<=0){
+location.reload();
+}
+},1000);
+</script>
+
+</body>
+</html>
+

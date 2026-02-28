@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stackly Bank</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:#f4f7fb;overflow-x:hidden;}
+
+/* ===== TOPBAR ===== */
+/* ===== TOP BAR ===== */
+.topbar{
+background:linear-gradient(90deg,#061a40,#0b2d6b);
+color:#fff;
+position:sticky;
+top:0;              /* IMPORTANT */
+z-index:1000;       /* above navbar */
+padding:7px 5%;
+display:flex;
+align-items:center;
+justify-content:space-between;
+flex-wrap:wrap;
+font-size:13px;
+height:38px;        /* FIXED HEIGHT (needed) */
+}
+
+/* ===== NAVBAR ===== */
+.navbar{
+background:#fff;
+height:70px;
+padding:0 5%;
+display:flex;
+align-items:center;
+justify-content:space-between;
+box-shadow:0 4px 18px rgba(0,0,0,.08);
+position:sticky;
+top:38px;           /* SAME as topbar height */
+z-index:999;
+}
+
+.top-left{display:flex;gap:18px;}
+.top-left i{color:#00e0ff;}
+
+.announcement{flex:1;overflow:hidden;margin:0 15px;}
+.ticker{white-space:nowrap;display:inline-block;animation:ticker 18s linear infinite;}
+@keyframes ticker{0%{transform:translateX(100%);}100%{transform:translateX(-100%);}}
+
+.top-right a{
+color:#fff;
+margin-left:12px;
+font-size:15px;
+transition:.3s;
+}
+.top-right a:hover{
+color:#00e0ff;
+transform:translateY(-3px) scale(1.15);
+}
+
+/* ===== NAVBAR ===== */
+
+/* logo */
+.logo{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:700;color:#0b2d6b;}
+.logo img{width:172px;height:auto;border-radius:50%;}
+
+/* nav */
+.nav-links{list-style:none;display:flex;gap:20px;align-items:center;}
+.nav-links a{
+text-decoration:none;color:#333;font-weight:500;padding:8px 14px;border-radius:20px;
+transition:.25s;
+}
+.nav-links a:hover{background:#eef4ff;color:#0b2d6b;}
+
+/* dropdown */
+.nav-links li{position:relative;}
+.dropdown{
+position:absolute;
+top:60px;
+left:0;
+background:#fff;
+box-shadow:0 12px 25px rgba(0,0,0,.12);
+border-radius:10px;
+overflow:hidden;
+max-height:0;
+transition:max-height .35s ease;
+}
+.dropdown a{display:block;padding:12px 14px;}
+.dropdown.open{max-height:300px;}
+
+.arrow{
+margin-left:6px;
+transition:.3s;
+}
+.arrow.rotate{transform:rotate(180deg);}
+
+/* buttons */
+.buttons{display:flex;gap:10px;}
+.buttons a{
+padding:8px 16px;
+border-radius:22px;
+font-weight:600;
+text-decoration:none;
+font-size:14px;
+}
+.download{background:linear-gradient(45deg,#00d4ff,#0b2d6b);color:#fff;}
+.login{background:#0b2d6b;color:#fff;}
+.contact{border:2px solid #0b2d6b;color:#0b2d6b;}
+
+/* hamburger */
+.hamburger{display:none;font-size:26px;cursor:pointer;color:#0b2d6b;}
+
+/* ===== MOBILE MENU ===== */
+.mobile-menu{
+position:fixed;
+top:0;
+left:-100%;
+width:100%;
+height:100%;
+background:#061a40;
+padding:90px 25px;
+transition:.45s ease;
+z-index:2000;
+overflow-y:auto;
+}
+.mobile-menu.active{left:0;}
+
+.close-btn{
+position:absolute;
+top:22px;
+right:25px;
+font-size:28px;
+color:#fff;
+cursor:pointer;
+}
+
+/* mobile links */
+.mobile-links a{
+display:flex;
+align-items:center;
+gap:14px;
+color:#fff;
+text-decoration:none;
+font-size:18px;
+padding:14px 8px;
+border-bottom:1px solid rgba(255,255,255,.15);
+}
+
+/* mobile dropdown */
+.mobile-dropdown{
+max-height:0;
+overflow:hidden;
+transition:max-height .35s ease;
+padding-left:35px;
+}
+.mobile-dropdown a{font-size:16px;padding:10px 0;color:#cfe3ff;}
+.mobile-dropdown.open{max-height:200px;}
+
+/* mobile buttons */
+.mobile-buttons{margin-top:18px;display:flex;flex-direction:column;gap:12px;}
+.mobile-buttons a{
+text-align:center;
+padding:12px;
+border-radius:25px;
+background:#0b2d6b;
+color:#fff;
+text-decoration:none;
+}
+.mobile-buttons a:first-child{background:linear-gradient(45deg,#00d4ff,#0b2d6b);}
+
+/* social animation */
+.mobile-social{
+display:flex;
+justify-content:center;
+gap:18px;
+margin-top:25px;
+padding-top:18px;
+border-top:1px solid rgba(255,255,255,.2);
+}
+.mobile-social a{
+color:#fff;
+font-size:22px;
+transition:.3s;
+}
+.mobile-social a:hover{transform:translateY(-5px) scale(1.2);color:#00e0ff;}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:950px){
+.nav-links,.buttons{display:none;}
+.hamburger{display:block;}
+.topbar{flex-direction:column;text-align:center;gap:5px;}
+.announcement{display:none;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+<div class="top-left">
+<span><i class="fa-solid fa-phone"></i> +91 98765 43210</span>
+<span><i class="fa-solid fa-envelope"></i> support@stacklydigital.com</span>
+</div>
+
+<div class="announcement">
+<div class="ticker">
+Stackly Digital Marketing helps businesses grow online through SEO, social media promotion, and targeted advertising.
+</div>
+</div>
+
+<div class="top-right">
+</div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+<div class="logo">
+<img src="stacklylogo (3).webp"> 
+</div>
+
+<ul class="nav-links">
+<li>
+<a href="index.html" onclick="toggleDesktopDropdown(event)">
+Home <i class="fa-solid fa-chevron-down arrow" id="deskArrow"></i>
+</a>
+<div class="dropdown" id="deskDropdown">
+    <a href="index.html">Home 1</a>
+<a href="home.html">Home 2</a>
+
+</div>
+</li>
+<li><a href="solution.html">Solutions</a></li>
+<li><a href="ourthinking.html">Our thinking</a></li>
+<li><a href="career.html">Career</a></li>
+<li><a href="Blog.html">Blog</a></li>
+<li><a href="contact1.html">Contact</a></li>
+
+</ul>
+
+<div class="buttons">
+
+<a href="login2.html" class="login">Login</a>
+
+</div>
+
+<div class="hamburger" onclick="openMenu()">
+<i class="fa-solid fa-bars"></i>
+</div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+<div class="close-btn" onclick="closeMenu()"><i class="fa-solid fa-xmark"></i></div>
+
+<div class="mobile-links">
+<a href="4041.html" onclick="toggleMobileDropdown(event)">
+<i class="fa-solid fa-house"></i> Home <i class="fa-solid fa-chevron-down arrow" id="mobArrow"></i>
+</a>
+
+<div class="mobile-dropdown" id="mobDropdown">
+<a href="index.html">Home 1</a>
+<a href="home.html">Home 2</a>
+
+</div>
+
+<a href="solution.html"><i class="fa-solid fa-credit-card"></i> Solutions</a>
+<a href="ourthinking.html"><i class="fa-solid fa-paper-plane"></i>Our thinking</a>
+<a href="career.html"><i class="fa-solid fa-hand-holding-dollar"></i> Career</a>
+<a href="Blog.html"><i class="fa-solid fa-paper-plane"></i> Blog</a>
+<a href="contact1.html"><i class="fa-solid fa-tags"></i> Contact</a>
+</div>
+
+<div class="mobile-buttons">
+<a href="4041.html">Download App</a>
+<a href="login2.html">Login</a>
+
+</div>
+
+<div class="mobile-social">
+<a href="4041.html"><i class="fab fa-facebook-f"></i></a>
+<a href="4041.html"><i class="fab fa-instagram"></i></a>
+<a href="4041.html"><i class="fab fa-x-twitter"></i></a>
+<a href="4041.html"><i class="fab fa-linkedin-in"></i></a>
+</div>
+</div>
+
+<script>
+const menu=document.getElementById("mobileMenu");
+
+function openMenu(){
+menu.classList.add("active");
+document.body.style.overflow="hidden";
+}
+function closeMenu(){
+menu.classList.remove("active");
+document.body.style.overflow="auto";
+}
+
+/* desktop dropdown */
+function toggleDesktopDropdown(e){
+e.preventDefault();
+document.getElementById("deskDropdown").classList.toggle("open");
+document.getElementById("deskArrow").classList.toggle("rotate");
+}
+
+/* mobile dropdown */
+function toggleMobileDropdown(e){
+e.preventDefault();
+document.getElementById("mobDropdown").classList.toggle("open");
+document.getElementById("mobArrow").classList.toggle("rotate");
+}
+</script>
+
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* ===== STACKLY UNIQUE VIDEO SECTION ===== */
+
+#stkVid_section{
+max-width:1200px;
+margin:80px auto;
+display:flex;
+align-items:center;
+gap:60px;
+padding:20px;
+background:#f3f4f6;
+}
+
+/* VIDEO CONTAINER */
+.stkVid_box{
+position:relative;
+width:55%;
+height:380px;
+border-radius:14px;
+overflow:hidden;
+cursor:pointer;
+background:#000;
+box-shadow:0 10px 30px rgba(0,0,0,.25);
+}
+
+.stkVid_box video{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+/* PLAY BUTTON */
+.stkVid_play{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:70px;
+height:70px;
+border-radius:50%;
+background:rgba(194, 16, 16, 0.9);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:28px;
+transition:.3s;
+pointer-events:none;
+}
+
+.stkVid_box.stkVid_playing .stkVid_play{
+opacity:0;
+}
+
+/* TEXT SIDE */
+.stkVid_text{
+width:45%;
+}
+
+.stkVid_text h2{
+font-size:40px;
+color:#081b4b;
+margin-bottom:18px;
+font-weight:700;
+}
+
+.stkVid_text p{
+line-height:1.7;
+color:#444;
+margin-bottom:25px;
+}
+
+/* BUTTON */
+.stkVid_btn{
+display:inline-block;
+background:#ff7a00;
+color:#fff;
+padding:14px 30px;
+border-radius:30px;
+text-decoration:none;
+font-weight:600;
+transition:.3s;
+}
+
+.stkVid_btn:hover{
+background:#000;
+}
+
+/* MOBILE */
+@media(max-width:900px){
+
+#stkVid_section{
+flex-direction:column;
+gap:30px;
+}
+
+.stkVid_box{
+width:100%;
+height:260px;
+}
+
+.stkVid_text{
+width:100%;
+text-align:center;
+}
+
+.stkVid_text h2{
+font-size:28px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<section id="stkVid_section">
+
+<!-- VIDEO -->
+<div class="stkVid_box" id="stkVid_container">
+
+<video id="stkVid_video" poster="digital16.webp">
+<source src="209409_medium (1).mp4" type="video/mp4">
+</video>
+
+<div class="stkVid_play">▶</div>
+
+</div>
+
+<!-- TEXT -->
+<div class="stkVid_text">
+<h2>A Community Where Brands Grow</h2>
+
+<p>
+Stackly Digital Marketing helps businesses increase traffic, generate leads
+and improve online visibility through SEO, paid advertising and creative campaigns.
+We turn visitors into customers using data-driven marketing strategies.
+</p>
+
+<a href="4041.html" class="stkVid_btn">Explore Stackly Services</a>
+</div>
+
+</section>
+
+<script>
+
+const stkVideo=document.getElementById("stkVid_video");
+const stkContainer=document.getElementById("stkVid_container");
+
+stkContainer.addEventListener("click",function(){
+
+if(stkVideo.paused){
+stkVideo.play();
+stkContainer.classList.add("stkVid_playing");
+}else{
+stkVideo.pause();
+stkContainer.classList.remove("stkVid_playing");
+}
+
+});
+
+</script>
+
+</body>
+</html>
+
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+#stk-solutions{
+font-family:Poppins,sans-serif;
+background:#ffffff;
+padding:80px 6%;
+}
+
+#stk-solutions h2{
+text-align:center;
+font-size:42px;
+margin-bottom:50px;
+color:#111;
+}
+
+/* GRID */
+.stk-sol-grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:30px;
+}
+
+/* CARD */
+.stk-sol-card{
+background:#fff;
+border-radius:14px;
+overflow:hidden;
+box-shadow:0 6px 18px rgba(0,0,0,.08);
+transition:.35s;
+border:1px solid #eee;
+}
+
+.stk-sol-card:hover{
+transform:translateY(-10px);
+box-shadow:0 16px 35px rgba(0,0,0,.15);
+}
+
+/* IMAGE */
+.stk-sol-card img{
+width:100%;
+height:200px;
+object-fit:cover;
+}
+
+/* CONTENT */
+.stk-sol-body{
+padding:22px;
+}
+
+.stk-sol-body h3{
+margin-bottom:10px;
+color:#111;
+}
+
+.stk-sol-body p{
+font-size:14px;
+color:#555;
+line-height:1.7;
+margin-bottom:20px;
+}
+
+/* BUTTON */
+.stk-btn{
+display:inline-block;
+background:#ff6a00;
+color:white;
+padding:12px 26px;
+border-radius:6px;
+text-decoration:none;
+font-weight:600;
+transition:.3s;
+}
+
+.stk-btn:hover{
+background:#000;
+}
+
+/* MOBILE */
+@media(max-width:1000px){
+.stk-sol-grid{grid-template-columns:1fr 1fr;}
+}
+
+@media(max-width:600px){
+.stk-sol-grid{grid-template-columns:1fr;}
+}
+
+</style>
+</head>
+
+<body>
+
+<section id="stk-solutions">
+
+<h2>Stackly Marketing Solutions</h2>
+
+<div class="stk-sol-grid">
+
+<!-- 1 -->
+<div class="stk-sol-card">
+<img src="digital21.webp">
+<div class="stk-sol-body">
+<h3>SEO Optimization</h3>
+<p>Improve website ranking on Google and drive organic traffic using keyword strategy, technical SEO and backlinks.</p>
+<a href="4041.html" class="stk-btn">Explore More</a>
+</div>
+</div>
+
+<!-- 2 -->
+<div class="stk-sol-card">
+<img src="digital22.webp">
+<div class="stk-sol-body">
+<h3>Google Ads Campaigns</h3>
+<p>Generate instant leads using paid search advertising, conversion tracking and ROI focused PPC campaigns.</p>
+<a href="4041.html" class="stk-btn">Explore More</a>
+</div>
+</div>
+
+<!-- 3 -->
+<div class="stk-sol-card">
+<img src="digital23.webp">
+<div class="stk-sol-body">
+<h3>Social Media Marketing</h3>
+<p>Grow your brand visibility on Instagram, Facebook and LinkedIn with engaging posts and ad campaigns.</p>
+<a href="4041.html" class="stk-btn">Explore More</a>
+</div>
+</div>
+
+<!-- 4 -->
+<div class="stk-sol-card">
+<img src="digital24.webp">
+<div class="stk-sol-body">
+<h3>Website Development</h3>
+<p>Modern business websites, landing pages and responsive designs built to convert visitors into customers.</p>
+<a href="4041.html" class="stk-btn">Explore More</a>
+</div>
+</div>
+
+<!-- 5 -->
+<div class="stk-sol-card">
+<img src="digital25.webp">
+<div class="stk-sol-body">
+<h3>Content Marketing</h3>
+<p>Blogs, articles and creative storytelling content that builds authority and customer trust online.</p>
+<a href="4041.html" class="stk-btn">Explore More</a>
+</div>
+</div>
+
+<!-- 6 -->
+<div class="stk-sol-card">
+<img src="digital26.webp">
+<div class="stk-sol-body">
+<h3>Email Marketing</h3>
+<p>Automated email campaigns and newsletters designed to nurture leads and increase repeat customers.</p>
+<a href="4041.html" class="stk-btn">Explore More</a>
+</div>
+</div>
+
+<!-- 7 -->
+<div class="stk-sol-card">
+<img src="digital34.webp">
+<div class="stk-sol-body">
+<h3>eCommerce Marketing</h3>
+<p>Boost online store sales with product ads, remarketing and conversion optimization strategies.</p>
+<a href="4041.html" class="stk-btn">Explore More</a>
+</div>
+</div>
+
+<!-- 8 -->
+<div class="stk-sol-card">
+<img src="digital35.webp">
+<div class="stk-sol-body">
+<h3>Analytics & Reporting</h3>
+<p>Track campaign performance with dashboards, Google Analytics insights and data-driven decision making.</p>
+<a href="4041.html" class="stk-btn">Explore More</a>
+</div>
+</div>
+
+</div>
+</section>
+
+</body>
+</html>
+
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+body{margin:0;font-family:Poppins,sans-serif;background:#0d0d0f;color:#fff;}
+
+
+#stk-press h2{
+font-size:38px;
+margin-bottom:40px;
+text-align:center;
+width:100%;
+display:block;
+}
+
+
+#stk-press h2{
+font-size:38px;
+margin-bottom:30px;
+}
+
+/* SLIDER WRAPPER */
+.stk-slider{
+position:relative;
+overflow:hidden;
+}
+
+/* TRACK */
+.stk-track{
+display:flex;
+gap:25px;
+transition:transform .6s ease;
+}
+
+/* CARD */
+.stk-card{
+flex:0 0 320px;
+background:#141418;
+border-radius:18px;
+padding:18px;
+transition:.35s;
+}
+
+.stk-card:hover{
+transform:translateY(-8px);
+box-shadow:0 10px 35px rgba(255,70,30,.35);
+}
+
+.stk-card img{
+width:100%;
+height:180px;
+object-fit:cover;
+border-radius:14px;
+margin:12px 0;
+}
+
+.stk-tag{
+color:#ff4d2d;
+font-size:12px;
+}
+
+.stk-card h3{
+font-size:18px;
+line-height:1.4;
+margin:10px 0;
+}
+
+.stk-btn{
+display:inline-block;
+background:#ff4d2d;
+color:#fff;
+padding:10px 20px;
+border-radius:20px;
+text-decoration:none;
+margin-top:8px;
+}
+
+.stk-btn:hover{
+background:#fff;
+color:#000;
+}
+
+/* ARROWS */
+.stk-arrow{
+position:absolute;
+top:45%;
+transform:translateY(-50%);
+width:50px;
+height:50px;
+border-radius:50%;
+background:#1b1b20;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+font-size:22px;
+z-index:5;
+user-select:none;
+}
+
+.stk-left{left:10px;}
+.stk-right{right:10px;}
+
+.stk-arrow:hover{
+background:#ff4d2d;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+.stk-card{flex:0 0 260px;}
+}
+
+</style>
+</head>
+
+<body>
+
+<section id="stk-press">
+
+<h2>Latest from Stackly</h2>
+
+<div class="stk-slider">
+
+<div class="stk-arrow stk-left" id="leftBtn">❮</div>
+<div class="stk-arrow stk-right" id="rightBtn">❯</div>
+
+<div class="stk-track" id="track">
+
+<!-- 6 CARDS -->
+
+<div class="stk-card">
+<div class="stk-tag">FEB 2026 • 2 MIN READ</div>
+<h3>SEO Strategy That Ranked a Brand #1 on Google</h3>
+<img src="digital34.webp">
+<a href="4041.html" class="stk-btn">Read More</a>
+</div>
+
+<div class="stk-card">
+<div class="stk-tag">JAN 2026 • 3 MIN READ</div>
+<h3>Instagram Campaign Increased Followers by 400%</h3>
+<img src="digital35.webp">
+<a href="4041.html" class="stk-btn">Read More</a>
+</div>
+
+<div class="stk-card">
+<div class="stk-tag">DEC 2025 • 5 MIN READ</div>
+<h3>Google Ads Generated 1200 Leads in 1 Month</h3>
+<img src="digital38.webp">
+<a href="4041.html" class="stk-btn">Read More</a>
+</div>
+
+<div class="stk-card">
+<div class="stk-tag">NOV 2025 • 2 MIN READ</div>
+<h3>Website Redesign Improved Sales Conversion</h3>
+<img src="digital39.webp">
+<a href="4041.html" class="stk-btn">Read More</a>
+</div>
+
+<div class="stk-card">
+<div class="stk-tag">OCT 2025 • 4 MIN READ</div>
+<h3>Email Automation Increased Repeat Customers</h3>
+<img src="digital40.webp">
+<a href="4041.html" class="stk-btn">Read More</a>
+</div>
+
+<div class="stk-card">
+<div class="stk-tag">SEP 2025 • 3 MIN READ</div>
+<h3>Content Marketing Built Brand Authority</h3>
+<img src="digital42.webp">
+<a href="4041.html" class="stk-btn">Read More</a>
+</div>
+
+</div>
+</div>
+
+</section>
+
+<script>
+
+const track=document.getElementById("track");
+const leftBtn=document.getElementById("leftBtn");
+const rightBtn=document.getElementById("rightBtn");
+
+let index=0;
+
+function updateSlider(){
+const card=document.querySelector(".stk-card");
+const cardWidth=card.offsetWidth+25;
+track.style.transform=`translateX(-${index*cardWidth}px)`;
+}
+
+rightBtn.onclick=()=>{
+const cards=document.querySelectorAll(".stk-card").length;
+if(index<cards-1) index++;
+updateSlider();
+};
+
+leftBtn.onclick=()=>{
+if(index>0) index--;
+updateSlider();
+};
+
+window.addEventListener("resize",updateSlider);
+
+</script>
+
+</body>
+</html>
+
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* HERO WRAPPER */
+#stk-video-hero{
+position:relative;
+height:100vh;
+width:100%;
+overflow:hidden;
+font-family:Poppins,sans-serif;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+color:white;
+}
+
+/* VIDEO */
+#stk-video-hero video{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+min-width:100%;
+min-height:100%;
+object-fit:cover;
+z-index:-2;
+}
+
+/* DARK OVERLAY */
+#stk-video-hero::after{
+content:"";
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.55);
+z-index:-1;
+}
+
+/* CONTENT */
+.stk-hero-content{
+max-width:780px;
+padding:20px;
+}
+
+.stk-hero-content h1{
+font-size:52px;
+margin-bottom:18px;
+}
+
+.stk-hero-content p{
+font-size:18px;
+line-height:1.8;
+margin-bottom:30px;
+opacity:.9;
+}
+
+/* BUTTON */
+.stk-hero-btn{
+display:inline-block;
+background:#ff6a00;
+color:white;
+padding:16px 38px;
+border-radius:6px;
+text-decoration:none;
+font-weight:600;
+transition:.3s;
+}
+
+.stk-hero-btn:hover{
+background:#ffffff;
+color:#000;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+
+.stk-hero-content h1{
+font-size:32px;
+}
+
+.stk-hero-content p{
+font-size:15px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<section id="stk-video-hero">
+
+<!-- VIDEO (FREE SAMPLE VIDEO) -->
+<video autoplay muted loop playsinline>
+<source src="11473-230853026_medium (1).mp4" type="video/mp4">
+</video>
+
+<div class="stk-hero-content">
+
+<h1>Grow Your Business with Stackly Digital Marketing</h1>
+
+<p>
+We help businesses attract customers, increase conversions and build powerful
+brands using SEO, social media marketing, paid advertising and modern web
+strategies. Your growth is our mission.
+</p>
+
+<a href="4041.html" class="stk-hero-btn">Get Started →</a>
+
+</div>
+
+</section>
+
+</body>
+</html>
+
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+body{
+background:#000;
+}
+
+/* OUTER BACKGROUND GRADIENT */
+#stacklyJoinSection{
+padding:100px 20px;
+background:linear-gradient(135deg,#000000,#ff7a00,#ffffff);
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+/* CARD */
+.join-card{
+max-width:900px;
+background:#ffffff;
+padding:60px 70px;
+border-radius:12px;
+box-shadow:0 20px 60px rgba(0,0,0,.35);
+text-align:left;
+}
+
+/* HEADING */
+.join-card h2{
+font-size:40px;
+color:#000;
+margin-bottom:20px;
+}
+
+/* TEXT */
+.join-card p{
+font-size:17px;
+line-height:1.7;
+color:#444;
+margin-bottom:30px;
+max-width:700px;
+}
+
+/* BUTTON */
+.join-btn{
+display:inline-block;
+background:#ff7a00;
+color:#fff;
+padding:15px 32px;
+border-radius:40px;
+text-decoration:none;
+font-weight:600;
+transition:.3s;
+position:relative;
+}
+
+.join-btn::after{
+content:"➜";
+margin-left:10px;
+transition:.3s;
+}
+
+.join-btn:hover{
+background:#000;
+transform:translateY(-3px);
+}
+
+.join-btn:hover::after{
+margin-left:16px;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+
+.join-card{
+padding:40px 25px;
+text-align:center;
+}
+
+.join-card h2{
+font-size:28px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<section id="stacklyJoinSection">
+
+<div class="join-card">
+
+<h2>Join Stackly Digital Marketing Community</h2>
+
+<p>
+Haven’t found the right opportunity yet? Stay connected with Stackly Digital Marketing.
+Receive updates about job openings, internships, training programs and company events.
+Grow your skills and career with our creative marketing team.
+</p>
+
+<a href="4041.html" class="join-btn">Sign Up</a>
+
+</div>
+
+</section>
+
+</body>
+</html>
+
+
+
+<!-- ===== STACKLY FOOTER ===== -->
+<footer class="stackly-footer">
+
+<div class="footer-container">
+
+<!-- ABOUT -->
+<div class="footer-col">
+<div class="footer-logo">
+<img src="stacklylogo (1).webp">
+<span></span>
+</div>
+
+<p class="about-text">
+Stackly Digital Marketing helps businesses grow online through SEO, social media promotion, and targeted advertising.
+</p>
+
+<div class="social-icons">
+<a href="4041.html"><i class="fab fa-facebook-f"></i></a>
+<a href="4041.html"><i class="fab fa-instagram"></i></a>
+<a href="4041.html"><i class="fab fa-x-twitter"></i></a>
+<a href="4041.html"><i class="fab fa-linkedin-in"></i></a>
+</div>
+</div>
+
+<!-- QUICK LINKS -->
+<div class="footer-col">
+<h3>Quick Links</h3>
+<ul>
+<li><a href="home.html">Home</a></li>
+<li><a href="solution.html">Solution</a></li>
+<li><a href="ourthinking.html">Our Thinking</a></li>
+<li><a href="Blog.html">Blog</a></li>
+<li><a href="contact1.html">Contact</a></li>
+</ul>
+</div>
+
+<!-- SERVICES -->
+<div class="footer-col">
+<h3>Services</h3>
+<ul>
+<li><a href="4041.html">SEO Optimization</a></li>
+<li><a href="4041.html">Email Marketing</a></li>
+<li><a href="4041.html">Video Marketing</a></li>
+<li><a href="4041.html">Social Media Marketing</a></li>
+<li><a href="4041.html">Investments</a></li>
+</ul>
+</div>
+
+<!-- CONTACT -->
+<div class="footer-col contact">
+<h3>Contact Us</h3>
+
+<div class="contact-box">
+<p><i class="fa-solid fa-location-dot"></i> Bengaluru, India</p>
+<p><i class="fa-solid fa-phone"></i> +91 98765 43210</p>
+<p><i class="fa-solid fa-envelope"></i> support@stacklyDigital.com</p>
+
+<!-- subscribe -->
+<div class="subscribe">
+<input type="email" id="emailBox" placeholder="Enter your email">
+<button onclick="joinNow()">Join</button>
+</div>
+
+<!-- centered download + QR -->
+<div class="app-center">
+
+<div class="apps">
+<a href="4041.html" class="app-btn ios"><i class="fab fa-apple"></i> iOS</a>
+<a href="4041.html" class="app-btn android"><i class="fab fa-google-play"></i> Android</a>
+</div>
+
+<div class="qr">
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=StacklyBank">
+<p>Scan & Download App</p>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+
+<!-- bottom -->
+<div class="footer-bottom">
+<p>© 2026 Stackly Banking Services</p>
+
+<div class="policies">
+<a href="4041.html">Privacy Policy</a>
+<a href="4041.html">Terms & Conditions</a>
+</div>
+</div>
+
+</footer>
+<style>
+    /* ===== FOOTER ===== */
+.stackly-footer{
+background:#04142f;
+color:#d6e4ff;
+margin-top:80px;
+padding-top:60px;
+}
+
+.footer-container{
+display:grid;
+grid-template-columns:2fr 1fr 1fr 2fr;
+gap:40px;
+padding:0 6% 50px;
+}
+
+/* logo */
+.footer-logo{
+display:flex;
+align-items:center;
+gap:12px;
+font-size:20px;
+font-weight:600;
+color:#fff;
+margin-bottom:14px;
+}
+.footer-logo img{width:146px;height:auto;border-radius:50%;}
+
+.about-text{line-height:1.7;font-size:14px;}
+
+/* social */
+.social-icons{margin-top:18px;}
+.social-icons a{
+color:#fff;
+margin-right:12px;
+font-size:18px;
+transition:.3s;
+}
+.social-icons a:hover{
+color:#00e0ff;
+transform:translateY(-4px);
+}
+
+/* links */
+.footer-col h3{color:#fff;margin-bottom:18px;}
+.footer-col ul{list-style:none;}
+.footer-col ul li{margin-bottom:10px;}
+.footer-col ul a{
+text-decoration:none;
+color:#d6e4ff;
+transition:.25s;
+}
+.footer-col ul a:hover{
+color:#00e0ff;
+padding-left:6px;
+}
+
+/* contact box */
+.contact-box{
+background:#071b45;
+padding:18px;
+border-radius:12px;
+}
+.contact-box p{
+display:flex;
+align-items:center;
+gap:10px;
+margin-bottom:12px;
+color:#fff;
+font-size:14px;
+}
+.contact-box i{color:#00e0ff;}
+
+/* subscribe */
+.subscribe{
+display:flex;
+border-radius:25px;
+overflow:hidden;
+background:#fff;
+margin-top:12px;
+}
+.subscribe input{
+flex:1;
+border:none;
+padding:11px 14px;
+outline:none;
+}
+.subscribe button{
+background:#00c8ff;
+border:none;
+padding:11px 18px;
+font-weight:600;
+cursor:pointer;
+}
+
+/* CENTER AREA */
+.app-center{
+display:flex;
+flex-direction:column;
+align-items:center;
+margin-top:18px;
+}
+
+/* app buttons centered */
+.apps{
+display:flex;
+gap:12px;
+justify-content:center;
+}
+.app-btn{
+text-decoration:none;
+padding:10px 16px;
+border-radius:22px;
+font-size:14px;
+color:#fff;
+}
+.ios{background:#000;}
+.android{background:#34a853;}
+
+/* QR centered */
+.qr{
+text-align:center;
+margin-top:18px;
+}
+.qr img{width:120px;border-radius:10px;}
+.qr p{font-size:13px;margin-top:6px;}
+
+/* bottom */
+.footer-bottom{
+border-top:1px solid rgba(255,255,255,.15);
+padding:18px 6%;
+display:flex;
+justify-content:space-between;
+flex-wrap:wrap;
+font-size:13px;
+}
+
+.policies a{
+color:#d6e4ff;
+margin-left:18px;
+text-decoration:none;
+}
+.policies a:hover{color:#00e0ff;}
+
+/* MOBILE */
+@media(max-width:900px){
+.footer-container{grid-template-columns:1fr;gap:35px;}
+.footer-bottom{flex-direction:column;gap:10px;}
+.apps{flex-direction:column;align-items:center;}
+}
+</style>
+<script>
+function joinNow(){
+let email=document.getElementById("emailBox").value;
+if(email===""){
+alert("Please enter email");
+return;
+}
+window.location.href="4041.html";
+}
+</script>

@@ -1,0 +1,1814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stackly Bank</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:#f4f7fb;overflow-x:hidden;}
+
+/* ===== TOPBAR ===== */
+/* ===== TOP BAR ===== */
+.topbar{
+background:linear-gradient(90deg,#061a40,#0b2d6b);
+color:#fff;
+position:sticky;
+top:0;              /* IMPORTANT */
+z-index:1000;       /* above navbar */
+padding:7px 5%;
+display:flex;
+align-items:center;
+justify-content:space-between;
+flex-wrap:wrap;
+font-size:13px;
+height:38px;        /* FIXED HEIGHT (needed) */
+}
+
+/* ===== NAVBAR ===== */
+.navbar{
+background:#fff;
+height:70px;
+padding:0 5%;
+display:flex;
+align-items:center;
+justify-content:space-between;
+box-shadow:0 4px 18px rgba(0,0,0,.08);
+position:sticky;
+top:38px;           /* SAME as topbar height */
+z-index:999;
+}
+
+.top-left{display:flex;gap:18px;}
+.top-left i{color:#00e0ff;}
+
+.announcement{flex:1;overflow:hidden;margin:0 15px;}
+.ticker{white-space:nowrap;display:inline-block;animation:ticker 18s linear infinite;}
+@keyframes ticker{0%{transform:translateX(100%);}100%{transform:translateX(-100%);}}
+
+.top-right a{
+color:#fff;
+margin-left:12px;
+font-size:15px;
+transition:.3s;
+}
+.top-right a:hover{
+color:#00e0ff;
+transform:translateY(-3px) scale(1.15);
+}
+
+/* ===== NAVBAR ===== */
+
+/* logo */
+.logo{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:700;color:#0b2d6b;}
+.logo img{width:172px;height:auto;border-radius:50%;}
+
+/* nav */
+.nav-links{list-style:none;display:flex;gap:20px;align-items:center;}
+.nav-links a{
+text-decoration:none;color:#333;font-weight:500;padding:8px 14px;border-radius:20px;
+transition:.25s;
+}
+.nav-links a:hover{background:#eef4ff;color:#0b2d6b;}
+
+/* dropdown */
+.nav-links li{position:relative;}
+.dropdown{
+position:absolute;
+top:60px;
+left:0;
+background:#fff;
+box-shadow:0 12px 25px rgba(0,0,0,.12);
+border-radius:10px;
+overflow:hidden;
+max-height:0;
+transition:max-height .35s ease;
+}
+.dropdown a{display:block;padding:12px 14px;}
+.dropdown.open{max-height:300px;}
+
+.arrow{
+margin-left:6px;
+transition:.3s;
+}
+.arrow.rotate{transform:rotate(180deg);}
+
+/* buttons */
+.buttons{display:flex;gap:10px;}
+.buttons a{
+padding:8px 16px;
+border-radius:22px;
+font-weight:600;
+text-decoration:none;
+font-size:14px;
+}
+.download{background:linear-gradient(45deg,#00d4ff,#0b2d6b);color:#fff;}
+.login{background:#0b2d6b;color:#fff;}
+.contact{border:2px solid #0b2d6b;color:#0b2d6b;}
+
+/* hamburger */
+.hamburger{display:none;font-size:26px;cursor:pointer;color:#0b2d6b;}
+
+/* ===== MOBILE MENU ===== */
+.mobile-menu{
+position:fixed;
+top:0;
+left:-100%;
+width:100%;
+height:100%;
+background:#061a40;
+padding:90px 25px;
+transition:.45s ease;
+z-index:2000;
+overflow-y:auto;
+}
+.mobile-menu.active{left:0;}
+
+.close-btn{
+position:absolute;
+top:22px;
+right:25px;
+font-size:28px;
+color:#fff;
+cursor:pointer;
+}
+
+/* mobile links */
+.mobile-links a{
+display:flex;
+align-items:center;
+gap:14px;
+color:#fff;
+text-decoration:none;
+font-size:18px;
+padding:14px 8px;
+border-bottom:1px solid rgba(255,255,255,.15);
+}
+
+/* mobile dropdown */
+.mobile-dropdown{
+max-height:0;
+overflow:hidden;
+transition:max-height .35s ease;
+padding-left:35px;
+}
+.mobile-dropdown a{font-size:16px;padding:10px 0;color:#cfe3ff;}
+.mobile-dropdown.open{max-height:200px;}
+
+/* mobile buttons */
+.mobile-buttons{margin-top:18px;display:flex;flex-direction:column;gap:12px;}
+.mobile-buttons a{
+text-align:center;
+padding:12px;
+border-radius:25px;
+background:#0b2d6b;
+color:#fff;
+text-decoration:none;
+}
+.mobile-buttons a:first-child{background:linear-gradient(45deg,#00d4ff,#0b2d6b);}
+
+/* social animation */
+.mobile-social{
+display:flex;
+justify-content:center;
+gap:18px;
+margin-top:25px;
+padding-top:18px;
+border-top:1px solid rgba(255,255,255,.2);
+}
+.mobile-social a{
+color:#fff;
+font-size:22px;
+transition:.3s;
+}
+.mobile-social a:hover{transform:translateY(-5px) scale(1.2);color:#00e0ff;}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:950px){
+.nav-links,.buttons{display:none;}
+.hamburger{display:block;}
+.topbar{flex-direction:column;text-align:center;gap:5px;}
+.announcement{display:none;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+<div class="top-left">
+<span><i class="fa-solid fa-phone"></i> +91 98765 43210</span>
+<span><i class="fa-solid fa-envelope"></i> support@stacklydigital.com</span>
+</div>
+
+<div class="announcement">
+<div class="ticker">
+Stackly Digital Marketing helps businesses grow online through SEO, social media promotion, and targeted advertising.
+</div>
+</div>
+
+<div class="top-right">
+</div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+<div class="logo">
+<img src="stacklylogo (3).webp"> 
+</div>
+
+<ul class="nav-links">
+<li>
+<a href="index.html" onclick="toggleDesktopDropdown(event)">
+Home <i class="fa-solid fa-chevron-down arrow" id="deskArrow"></i>
+</a>
+<div class="dropdown" id="deskDropdown">
+    <a href="index.html">Home 1</a>
+<a href="home.html">Home 2</a>
+
+
+</div>
+</li>
+<li><a href="services.html">Services</a></li>
+<li><a href="dashboard.html">Dashboard</a></li>
+<li><a href="project.html">Projects</a></li>
+<li><a href="about.html">About</a></li>
+<li><a href="contact.html">Contact</a></li>
+
+</ul>
+
+<div class="buttons">
+
+<a href="login.html" class="login">Login</a>
+
+
+</div>
+
+<div class="hamburger" onclick="openMenu()">
+<i class="fa-solid fa-bars"></i>
+</div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+<div class="close-btn" onclick="closeMenu()"><i class="fa-solid fa-xmark"></i></div>
+
+<div class="mobile-links">
+<a href="404.html" onclick="toggleMobileDropdown(event)">
+<i class="fa-solid fa-house"></i> Home <i class="fa-solid fa-chevron-down arrow" id="mobArrow"></i>
+</a>
+
+<div class="mobile-dropdown" id="mobDropdown">
+<a href="index.html">Home 1</a>
+<a href="home.html">Home 2</a>
+
+</div>
+
+<a href="services.html"><i class="fa-solid fa-credit-card"></i> Services</a>
+<a href="dashboard.html"><i class="fa-solid fa-hand-holding-dollar"></i> Dashboard</a>
+<a href="project.html"><i class="fa-solid fa-paper-plane"></i> Projects</a>
+<a href="about.html"><i class="fa-solid fa-paper-plane"></i> About</a>
+<a href="contact.html"><i class="fa-solid fa-tags"></i> Contact</a>
+</div>
+
+<div class="mobile-buttons">
+<a href="404.html">Download App</a>
+<a href="login.html">Login</a>
+
+</div>
+
+<div class="mobile-social">
+<a href="404.html"><i class="fab fa-facebook-f"></i></a>
+<a href="404.html"><i class="fab fa-instagram"></i></a>
+<a href="404.html"><i class="fab fa-x-twitter"></i></a>
+<a href="404.html"><i class="fab fa-linkedin-in"></i></a>
+</div>
+</div>
+
+<script>
+const menu=document.getElementById("mobileMenu");
+
+function openMenu(){
+menu.classList.add("active");
+document.body.style.overflow="hidden";
+}
+function closeMenu(){
+menu.classList.remove("active");
+document.body.style.overflow="auto";
+}
+
+/* desktop dropdown */
+function toggleDesktopDropdown(e){
+e.preventDefault();
+document.getElementById("deskDropdown").classList.toggle("open");
+document.getElementById("deskArrow").classList.toggle("rotate");
+}
+
+/* mobile dropdown */
+function toggleMobileDropdown(e){
+e.preventDefault();
+document.getElementById("mobDropdown").classList.toggle("open");
+document.getElementById("mobArrow").classList.toggle("rotate");
+}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* ===== RESET ===== */
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+scroll-behavior:smooth;
+}
+
+body{background:#fff;}
+
+/* ================= HERO ================= */
+#stkhero{
+position:relative;
+height:520px;
+display:flex;
+align-items:center;
+overflow:hidden;
+padding-bottom:90px; /* IMPORTANT — space for follow bar */
+}
+
+/* background image */
+#stkhero::before{
+content:"";
+position:absolute;
+inset:0;
+background:url("bengaluru.webp") center/cover no-repeat;
+z-index:-2;
+}
+
+/* blue overlay */
+#stkhero::after{
+content:"";
+position:absolute;
+inset:0;
+background:linear-gradient(90deg,rgba(167, 25, 56, 0.92) 45%,rgba(217, 223, 233, 0.35));
+z-index:-1;
+}
+
+/* container */
+.stkhero-wrap{
+max-width:1200px;
+margin:auto;
+padding:0 6%;
+width:100%;
+}
+
+/* content */
+.stkhero-content{
+max-width:560px;
+color:#fff;
+}
+
+/* small text */
+.stkhero-small{
+font-size:18px;
+opacity:.9;
+margin-bottom:10px;
+}
+
+/* typing title */
+#typingTitle{
+font-size:44px;
+font-weight:700;
+line-height:1.15;
+margin-bottom:18px;
+min-height:110px;
+}
+
+/* subtitle */
+.stkhero-sub{
+font-size:18px;
+opacity:.9;
+margin-bottom:28px;
+}
+
+/* button */
+.stkhero-btn{
+display:inline-flex;
+align-items:center;
+gap:10px;
+padding:13px 24px;
+background:#2e8cff;
+color:#fff;
+text-decoration:none;
+font-weight:500;
+border-radius:6px;
+transition:.25s;
+}
+
+.stkhero-btn span{
+font-size:18px;
+transition:.25s;
+}
+
+.stkhero-btn:hover{
+background:#0b63ff;
+}
+
+.stkhero-btn:hover span{
+transform:translateX(6px);
+}
+
+/* ===== FOLLOW BAR INSIDE HERO ===== */
+.stk-followbar{
+position:absolute;
+bottom:0;
+left:0;
+width:100%;
+background:#f2f4f8;
+padding:18px 10px;
+text-align:center;
+}
+
+/* follow text */
+.stk-followbar h3{
+font-weight:500;
+margin-bottom:10px;
+color:#111;
+}
+
+/* icons */
+.stk-icons{
+display:flex;
+justify-content:center;
+gap:12px;
+}
+
+.stk-icons a{
+width:40px;
+height:40px;
+border-radius:6px;
+background:#fff;
+border:1px solid #d8dee8;
+display:flex;
+align-items:center;
+justify-content:center;
+text-decoration:none;
+color:#0b63ff;
+font-weight:600;
+transition:.25s;
+}
+
+.stk-icons a:hover{
+background:#0b63ff;
+color:#fff;
+}
+
+/* ===== SCROLL REVEAL ===== */
+.reveal{
+opacity:0;
+transform:translateY(60px);
+transition:.9s ease;
+}
+.reveal.active{
+opacity:1;
+transform:translateY(0);
+}
+
+/* ===== MOBILE ===== */
+@media(max-width:900px){
+
+#stkhero{height:auto;padding:70px 0 110px 0;}
+
+#typingTitle{font-size:30px;min-height:auto;}
+
+.stkhero-sub{font-size:16px;}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- HERO -->
+
+<section id="stkhero">
+
+<div class="stkhero-wrap">
+<div class="stkhero-content reveal">
+
+<div class="stkhero-small">Stackly Digital Marketing About</div>
+
+<h1 id="typingTitle"></h1>
+
+<div class="stkhero-sub">
+We help banks and fintech businesses grow customers through SEO,
+social media campaigns and paid advertisements.
+</div>
+
+<a href="404.html" class="stkhero-btn">
+See how <span>➜</span>
+</a>
+
+</div>
+</div>
+
+<!-- FOLLOW BAR -->
+
+<div class="stk-followbar reveal">
+<h3>Follow us</h3>
+
+<div class="stk-icons">
+<a href="404.html">X</a>
+<a href="404.html">f</a>
+<a href="404.html">in</a>
+<a href="404.html">▶</a>
+</div>
+</div>
+
+</section>
+
+<script>
+
+/* typing animation */
+const text="Grow Faster with Stackly Marketing";
+let i=0;
+function type(){
+if(i<text.length){
+document.getElementById("typingTitle").innerHTML+=text.charAt(i);
+i++;
+setTimeout(type,35);
+}
+}
+type();
+
+/* scroll reveal */
+function reveal(){
+document.querySelectorAll(".reveal").forEach(el=>{
+if(el.getBoundingClientRect().top < window.innerHeight-120){
+el.classList.add("active");
+}
+});
+}
+window.addEventListener("scroll",reveal);
+window.addEventListener("load",reveal);
+
+</script>
+
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* ===== BASE ===== */
+body{
+margin:0;
+font-family:'Poppins',sans-serif;
+background:#f4f5f7;
+color:#1b1b1b;
+}
+
+#stkabout{
+max-width:1250px;
+margin:90px auto;
+padding:0 20px;
+}
+
+/* ===== WHO WE ARE ===== */
+.stkabout-top{
+display:grid;
+grid-template-columns:1.2fr 1fr;
+gap:50px;
+align-items:center;
+margin-bottom:80px;
+}
+
+.stkabout-title{
+font-size:40px;
+margin-bottom:18px;
+font-weight:600;
+}
+
+.stkabout-desc{
+font-size:15px;
+line-height:1.8;
+color:#555;
+}
+
+.stkabout-img img{
+width:100%;
+border-radius:10px;
+}
+
+/* ===== WHAT WE DO ===== */
+.stkabout-middle{
+margin:70px 0;
+}
+
+.stkabout-middle h2{
+font-size:34px;
+margin-bottom:15px;
+}
+
+.stkabout-middle p{
+color:#555;
+line-height:1.8;
+max-width:900px;
+}
+
+/* ===== FEATURES ===== */
+.stkabout-features{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:40px;
+margin-top:50px;
+}
+
+.stkabout-feature h3{
+font-size:18px;
+margin-bottom:10px;
+}
+
+.stkabout-feature p{
+font-size:14px;
+color:#555;
+line-height:1.7;
+margin-bottom:10px;
+}
+
+.stkabout-link{
+color:#0b63ff;
+text-decoration:none;
+font-weight:600;
+}
+
+/* ===== IMPACT CARD ===== */
+.stkabout-impact{
+margin-top:80px;
+display:grid;
+grid-template-columns:1fr 1fr;
+background:#fff;
+border-radius:12px;
+overflow:hidden;
+box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+.stkabout-impact img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.stkimpact-text{
+padding:40px;
+}
+
+.stkimpact-tag{
+color:#ff4a0a;
+font-size:13px;
+font-weight:600;
+margin-bottom:12px;
+}
+
+.stkimpact-text h3{
+font-size:24px;
+margin-bottom:10px;
+}
+
+.stkimpact-text p{
+color:#555;
+line-height:1.7;
+margin-bottom:15px;
+}
+
+.stkimpact-text a{
+text-decoration:none;
+color:#0b63ff;
+font-weight:600;
+}
+
+/* ===== SCROLL REVEAL ===== */
+.reveal{
+opacity:0;
+transform:translateY(70px);
+transition:.9s cubic-bezier(.2,.65,.25,1);
+}
+.reveal.active{
+opacity:1;
+transform:translateY(0);
+}
+
+/* ===== MOBILE ===== */
+@media(max-width:900px){
+
+.stkabout-top{
+grid-template-columns:1fr;
+}
+
+.stkabout-features{
+grid-template-columns:1fr;
+}
+
+.stkabout-impact{
+grid-template-columns:1fr;
+}
+
+.stkabout-title{font-size:28px;}
+.stkabout-middle h2{font-size:26px;}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<section id="stkabout">
+
+<!-- WHO WE ARE -->
+
+<div class="stkabout-top reveal">
+<div>
+<div class="stkabout-title">Who we are</div>
+<div class="stkabout-desc">
+Stackly Digital Marketing is a growth-focused marketing and technology company helping banks,
+fintech startups and financial institutions reach more customers online. We combine SEO, paid
+advertising, analytics and automation tools to build scalable marketing systems that generate
+leads, increase engagement and improve brand trust.
+</div>
+</div>
+
+<div class="stkabout-img">
+<img src="andrea-de-santis-aOve8xFnjdM-unsplash.webp">
+</div>
+</div>
+
+<!-- WHAT WE DO -->
+
+<div class="stkabout-middle reveal">
+<h2>What can we do for you?</h2>
+<p>
+We help financial businesses grow faster through digital acquisition strategies.
+Our services include search engine optimization, social media marketing,
+Google Ads campaigns, content marketing and marketing automation.
+Through continuous optimization and real-time analytics, we help clients
+increase conversions and maximize return on investment.
+</p>
+</div>
+
+<!-- FEATURES -->
+
+<div class="stkabout-features reveal">
+
+<div class="stkabout-feature">
+<h3>Our Services</h3>
+<p>End-to-end digital marketing including SEO, paid ads, social media campaigns and branding strategy.</p>
+<a class="stkabout-link" href="404.html">Learn more →</a>
+</div>
+
+<div class="stkabout-feature">
+<h3>Global Reach</h3>
+<p>We support clients across multiple regions and industries with scalable online marketing systems.</p>
+<a class="stkabout-link" href="404.html">Take a look →</a>
+</div>
+
+<div class="stkabout-feature">
+<h3>Our Process</h3>
+<p>Data-driven strategies combined with creative storytelling to attract and convert customers.</p>
+<a class="stkabout-link" href="404.html">Explore here →</a>
+</div>
+
+</div>
+
+<!-- IMPACT CARD -->
+
+<div class="stkabout-impact reveal">
+<img src="video.webp">
+<div class="stkimpact-text">
+<div class="stkimpact-tag">CLIENT SUCCESS</div>
+<h3>Our Impact</h3>
+<p>
+Stackly helped a fintech lending company increase qualified leads by 300% and
+reduce customer acquisition cost through performance marketing and funnel optimization.
+</p>
+<a href="404.html">Read more →</a>
+</div>
+</div>
+
+</section>
+
+<script>
+
+/* SCROLL REVEAL */
+function reveal(){
+document.querySelectorAll('.reveal').forEach(el=>{
+if(el.getBoundingClientRect().top < window.innerHeight-120){
+el.classList.add('active');
+}
+});
+}
+window.addEventListener('scroll',reveal);
+window.addEventListener('load',reveal);
+
+</script>
+
+</body>
+</html>
+
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+/* ===== SECTION ===== */
+#stktest{
+background:#eef2f5;
+padding:90px 20px;
+font-family:'Poppins',sans-serif;
+overflow:hidden;
+}
+
+/* container */
+.stktest-wrap{
+max-width:900px;
+margin:auto;
+position:relative;
+}
+
+/* vertical line */
+.stktest-line{
+position:absolute;
+left:0;
+top:10px;
+bottom:10px;
+width:5px;
+background:#0b63ff;
+border-radius:4px;
+}
+
+/* slider box */
+.stktest-slider{
+overflow:hidden;
+height:260px;
+position:relative;
+}
+
+/* slide column */
+.stktest-track{
+display:flex;
+flex-direction:column;
+transition:transform .8s ease;
+}
+
+/* single testimonial */
+.stktest-item{
+padding-left:40px;
+min-height:260px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+}
+
+/* quote */
+.stktest-quote{
+font-size:20px;
+line-height:1.8;
+color:#2a2a2a;
+margin-bottom:28px;
+font-style:italic;
+}
+
+/* profile */
+.stktest-profile{
+display:flex;
+align-items:center;
+gap:14px;
+}
+
+.stktest-profile img{
+width:50px;
+height:50px;
+border-radius:50%;
+object-fit:cover;
+}
+
+.stktest-name{
+font-weight:600;
+}
+
+.stktest-role{
+font-size:13px;
+color:#666;
+}
+
+/* learn more */
+.stktest-more{
+margin-top:25px;
+color:#0b63ff;
+font-weight:600;
+text-decoration:none;
+display:inline-block;
+}
+
+.stktest-more:hover{
+text-decoration:underline;
+}
+
+/* reveal */
+.reveal{
+opacity:0;
+transform:translateY(60px);
+transition:.9s;
+}
+.reveal.active{
+opacity:1;
+transform:translateY(0);
+}
+
+/* mobile */
+@media(max-width:600px){
+.stktest-quote{font-size:17px;}
+.stktest-item{padding-left:30px;}
+.stktest-slider{height:300px;}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<section id="stktest">
+
+<div class="stktest-wrap reveal">
+
+<div class="stktest-line"></div>
+
+<div class="stktest-slider">
+<div class="stktest-track" id="stktrack">
+
+<!-- 1 -->
+
+<div class="stktest-item">
+<div class="stktest-quote">
+“Stackly transformed our online banking acquisition. We now generate consistent qualified leads every month.”
+</div>
+<div class="stktest-profile">
+<img src="hr3.webp">
+<div>
+<div class="stktest-name">Rahul Sharma</div>
+<div class="stktest-role">CEO, FinTrust Finance</div>
+</div>
+</div>
+<a href="404.html" class="stktest-more">Learn more →</a>
+</div>
+
+<!-- 2 -->
+
+<div class="stktest-item">
+<div class="stktest-quote">
+“SEO and paid campaigns by Stackly increased our traffic by more than 200% in just six months.”
+</div>
+<div class="stktest-profile">
+<img src="hr11.webp">
+<div>
+<div class="stktest-name">Priya Mehta</div>
+<div class="stktest-role">Marketing Head, UrbanBank</div>
+</div>
+</div>
+<a href="404.html" class="stktest-more">Learn more →</a>
+</div>
+
+<!-- 3 -->
+
+<div class="stktest-item">
+<div class="stktest-quote">
+“Stackly’s analytics dashboard helped us understand our ROI and optimize our advertising budget effectively.”
+</div>
+<div class="stktest-profile">
+<img src="hrwomen.webp">
+<div>
+<div class="stktest-name">Arjun Patel</div>
+<div class="stktest-role">Founder, LoanBridge</div>
+</div>
+</div>
+<a href="404.html" class="stktest-more">Learn more →</a>
+</div>
+
+<!-- 4 -->
+
+<div class="stktest-item">
+<div class="stktest-quote">
+“Our fintech app installs doubled after Stackly launched targeted social media campaigns.”
+</div>
+<div class="stktest-profile">
+<img src="hr2.webp">
+<div>
+<div class="stktest-name">Sneha Kapoor</div>
+<div class="stktest-role">Product Manager, PayNext</div>
+</div>
+</div>
+<a href="404.html" class="stktest-more">Learn more →</a>
+</div>
+
+<!-- 5 -->
+
+<div class="stktest-item">
+<div class="stktest-quote">
+“Professional, reliable and data-driven — Stackly helped us scale our digital marketing confidently.”
+</div>
+<div class="stktest-profile">
+<img src="hr11.webp">
+<div>
+<div class="stktest-name">Vikram Nair</div>
+<div class="stktest-role">Director, SecureCredit</div>
+</div>
+</div>
+<a href="404.html" class="stktest-more">Learn more →</a>
+</div>
+
+</div>
+</div>
+
+</div>
+
+</section>
+
+<script>
+
+/* AUTO SLIDE UP */
+const track=document.getElementById("stktrack");
+const items=document.querySelectorAll(".stktest-item");
+let index=0;
+
+function slideUp(){
+index++;
+if(index>=items.length){index=0;}
+track.style.transform=`translateY(-${index*260}px)`;
+}
+setInterval(slideUp,4000);
+
+/* SCROLL REVEAL */
+function reveal(){
+document.querySelectorAll('.reveal').forEach(el=>{
+if(el.getBoundingClientRect().top < window.innerHeight-120){
+el.classList.add('active');
+}
+});
+}
+window.addEventListener('scroll',reveal);
+window.addEventListener('load',reveal);
+
+</script>
+
+</body>
+</html>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* ===== BASE ===== */
+body{
+margin:0;
+font-family:'Poppins',sans-serif;
+background:#f2f4f8;
+color:#1a1a1a;
+}
+
+#stkevents{
+max-width:1250px;
+margin:90px auto;
+padding:0 20px;
+}
+
+/* HEADER */
+#stkevents h2{
+font-size:42px;
+margin-bottom:50px;
+font-weight:600;
+}
+
+/* GRID */
+.stkevents-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:28px;
+}
+
+/* CARD */
+.stkevent-card{
+background:#fff;
+border-radius:10px;
+overflow:hidden;
+box-shadow:0 8px 25px rgba(0,0,0,.08);
+transition:.35s;
+}
+
+.stkevent-card:hover{
+transform:translateY(-8px);
+box-shadow:0 16px 40px rgba(0,0,0,.15);
+}
+
+/* IMAGE */
+.stkevent-img img{
+width:100%;
+height:210px;
+object-fit:cover;
+display:block;
+}
+
+/* CONTENT */
+.stkevent-body{
+padding:22px;
+}
+
+.stkevent-tag{
+font-size:12px;
+font-weight:600;
+color:#ff4a0a;
+margin-bottom:10px;
+letter-spacing:.5px;
+}
+
+.stkevent-title{
+font-size:20px;
+margin-bottom:12px;
+line-height:1.4;
+font-weight:600;
+}
+
+.stkevent-desc{
+font-size:14px;
+color:#555;
+line-height:1.7;
+margin-bottom:18px;
+}
+
+/* BUTTON */
+.stkevent-btn{
+display:inline-flex;
+align-items:center;
+gap:8px;
+text-decoration:none;
+font-weight:600;
+color:#0b63ff;
+}
+
+.stkevent-btn span{
+transition:.25s;
+}
+
+.stkevent-btn:hover span{
+transform:translateX(6px);
+}
+
+/* SCROLL REVEAL */
+.reveal{
+opacity:0;
+transform:translateY(60px);
+transition:.9s cubic-bezier(.2,.65,.25,1);
+}
+.reveal.active{
+opacity:1;
+transform:translateY(0);
+}
+
+/* MOBILE */
+@media(max-width:900px){
+.stkevents-grid{
+grid-template-columns:1fr;
+}
+#stkevents h2{font-size:28px;}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<section id="stkevents">
+
+<h2>Events & Conferences</h2>
+
+<div class="stkevents-grid">
+
+<!-- 1 -->
+
+<div class="stkevent-card reveal">
+<div class="stkevent-img">
+<img src="digital1.webp">
+</div>
+<div class="stkevent-body">
+<div class="stkevent-tag">DIGITAL MARKETING SUMMIT</div>
+<div class="stkevent-title">Fintech Growth Conference 2026</div>
+<div class="stkevent-desc">
+Learn how digital banking companies scale customer acquisition using SEO and performance ads.
+</div>
+<a href="404.html" class="stkevent-btn">View Details <span>→</span></a>
+</div>
+</div>
+
+<!-- 2 -->
+
+<div class="stkevent-card reveal">
+<div class="stkevent-img">
+<img src="digital2.webp">
+</div>
+<div class="stkevent-body">
+<div class="stkevent-tag">WORKSHOP</div>
+<div class="stkevent-title">Google Ads Masterclass</div>
+<div class="stkevent-desc">
+Stackly experts teach campaign optimization and lead generation strategies for financial services.
+</div>
+<a href="404.html" class="stkevent-btn">View Details <span>→</span></a>
+</div>
+</div>
+
+<!-- 3 -->
+
+<div class="stkevent-card reveal">
+<div class="stkevent-img">
+<img src="digital3.webp">
+</div>
+<div class="stkevent-body">
+<div class="stkevent-tag">IN-PERSON CONFERENCE</div>
+<div class="stkevent-title">Social Media Strategy Forum</div>
+<div class="stkevent-desc">
+Discuss influencer marketing and social engagement trends in the fintech industry.
+</div>
+<a href="404.html" class="stkevent-btn">View Details <span>→</span></a>
+</div>
+</div>
+
+<!-- 4 -->
+
+<div class="stkevent-card reveal">
+<div class="stkevent-img">
+<img src="digital4.webp">
+</div>
+<div class="stkevent-body">
+<div class="stkevent-tag">WEBINAR</div>
+<div class="stkevent-title">AI Marketing Automation Webinar</div>
+<div class="stkevent-desc">
+Understand how AI can automate customer journeys and improve conversions.
+</div>
+<a href="404.html" class="stkevent-btn">View Details <span>→</span></a>
+</div>
+</div>
+
+<!-- 5 -->
+
+<div class="stkevent-card reveal">
+<div class="stkevent-img">
+<img src="digital5.webp">
+</div>
+<div class="stkevent-body">
+<div class="stkevent-tag">MARKETING MEETUP</div>
+<div class="stkevent-title">Content Marketing Bootcamp</div>
+<div class="stkevent-desc">
+Learn storytelling techniques to build trust in banking and financial products.
+</div>
+<a href="404.html" class="stkevent-btn">View Details <span>→</span></a>
+</div>
+</div>
+
+<!-- 6 -->
+
+<div class="stkevent-card reveal">
+<div class="stkevent-img">
+<img src="digital6.webp">
+</div>
+<div class="stkevent-body">
+<div class="stkevent-tag">ANALYTICS WORKSHOP</div>
+<div class="stkevent-title">Marketing Data & ROI Analytics</div>
+<div class="stkevent-desc">
+Track campaign performance, conversion funnels and digital marketing ROI.
+</div>
+<a href="404.html" class="stkevent-btn">View Details <span>→</span></a>
+</div>
+</div>
+
+</div>
+</section>
+
+<script>
+
+/* SCROLL REVEAL */
+function reveal(){
+document.querySelectorAll('.reveal').forEach(el=>{
+if(el.getBoundingClientRect().top < window.innerHeight-120){
+el.classList.add('active');
+}
+});
+}
+window.addEventListener('scroll',reveal);
+window.addEventListener('load',reveal);
+
+</script>
+
+</body>
+</html>
+
+
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+/* ===== UNIQUE STACKLY APP SECTION ===== */
+
+#stkapp-section{
+background:linear-gradient(120deg,#bfbfd6,#020e22);
+padding:80px 6%;
+color:#fff;
+font-family:'Poppins',sans-serif;
+}
+
+/* layout */
+#stkapp-container{
+max-width:1200px;
+margin:auto;
+display:flex;
+align-items:center;
+justify-content:center;
+gap:70px;
+flex-wrap:wrap;
+}
+
+/* QR AREA */
+#stkapp-qrbox{
+text-align:center;
+}
+
+#stkapp-title{
+font-size:18px;
+margin-bottom:18px;
+letter-spacing:.5px;
+}
+
+#stkapp-qrbox img{
+width:160px;
+height:160px;
+background:#fff;
+padding:14px;
+border-radius:16px;
+box-shadow:0 10px 25px rgba(0,0,0,.5);
+}
+
+/* STORE BUTTONS AREA */
+#stkapp-buttons{
+display:flex;
+gap:26px;
+flex-wrap:wrap;
+}
+
+/* BUTTON */
+.stkapp-btn{
+display:flex;
+align-items:center;
+gap:14px;
+background:#000;
+padding:16px 26px;
+border-radius:16px;
+text-decoration:none;
+color:#fff;
+transition:.25s;
+min-width:240px;
+}
+
+.stkapp-btn:hover{
+transform:translateY(-5px);
+background:#0d0d0d;
+box-shadow:0 12px 35px rgba(0,0,0,.6);
+}
+
+/* icon */
+.stkapp-icon{
+font-size:30px;
+}
+
+/* text */
+.stkapp-text small{
+display:block;
+font-size:12px;
+opacity:.7;
+letter-spacing:.5px;
+}
+
+.stkapp-text span{
+font-size:18px;
+font-weight:600;
+}
+
+/* ===== MOBILE ===== */
+@media(max-width:768px){
+
+#stkapp-container{
+flex-direction:column;
+gap:45px;
+text-align:center;
+}
+
+#stkapp-buttons{
+justify-content:center;
+}
+
+.stkapp-btn{
+width:240px;
+justify-content:center;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<section id="stkapp-section">
+
+<div id="stkapp-container">
+
+<!-- QR CODE -->
+
+<div id="stkapp-qrbox">
+<div id="stkapp-title">Scan to Download</div>
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://stacklybank.com">
+</div>
+
+<!-- STORE BUTTONS -->
+
+<div id="stkapp-buttons">
+
+<a href="404.html" class="stkapp-btn">
+<div class="stkapp-icon">🍎</div>
+<div class="stkapp-text">
+<small>Download on the</small>
+<span>App Store</span>
+</div>
+</a>
+
+<a href="404.html" class="stkapp-btn">
+<div class="stkapp-icon">▶</div>
+<div class="stkapp-text">
+<small>GET IT ON</small>
+<span>Google Play</span>
+</div>
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+</body>
+</html>
+<!-- ===== SUBSCRIBE BANNER ===== -->
+<section class="subscribe-banner">
+
+<div class="sub-left">
+<h2>Direct to your inbox</h2>
+<p>Stay up to date with our Editor's Picks newsletter.</p>
+</div>
+
+<div class="sub-right">
+<a href="404.html" class="subscribe-btn">Subscribe</a>
+</div>
+
+</section>
+<style>
+    /* ===== SUBSCRIBE BANNER ===== */
+.subscribe-banner{
+width:100%;
+background:#ffe100;
+padding:35px 6%;
+display:flex;
+align-items:center;
+justify-content:space-between;
+flex-wrap:wrap;
+gap:20px;
+}
+
+/* text */
+.sub-left h2{
+font-size:28px;
+color:#111;
+margin-bottom:6px;
+font-weight:600;
+}
+
+.sub-left p{
+font-size:16px;
+color:#222;
+opacity:.85;
+}
+
+/* button */
+.subscribe-btn{
+background:transparent;
+border:2px solid #000;
+padding:14px 38px;
+text-decoration:none;
+color:#000;
+font-weight:600;
+transition:.25s;
+display:inline-block;
+}
+
+.subscribe-btn:hover{
+background:#000;
+color:#fff;
+transform:translateY(-2px);
+box-shadow:0 6px 18px rgba(0,0,0,.25);
+}
+
+/* ===== MOBILE ===== */
+@media(max-width:768px){
+
+.subscribe-banner{
+flex-direction:column;
+text-align:center;
+padding:30px 18px;
+}
+
+.sub-left h2{
+font-size:22px;
+}
+
+.sub-left p{
+font-size:14px;
+}
+
+.subscribe-btn{
+width:220px;
+margin-top:10px;
+}
+
+}
+</style>
+<!-- ===== STACKLY FOOTER ===== -->
+<footer class="stackly-footer">
+
+<div class="footer-container">
+
+<!-- ABOUT -->
+<div class="footer-col">
+<div class="footer-logo">
+<img src="stacklylogo (1).webp">
+<span></span>
+</div>
+
+<p class="about-text">
+Stackly Digital Marketing helps businesses grow online through SEO, social media promotion, and targeted advertising.
+</p>
+
+<div class="social-icons">
+<a href="404.html"><i class="fab fa-facebook-f"></i></a>
+<a href="404.html"><i class="fab fa-instagram"></i></a>
+<a href="404.html"><i class="fab fa-x-twitter"></i></a>
+<a href="404.html"><i class="fab fa-linkedin-in"></i></a>
+</div>
+</div>
+
+<!-- QUICK LINKS -->
+<div class="footer-col">
+<h3>Quick Links</h3>
+<ul>
+<li><a href="404.html">Home</a></li>
+<li><a href="404.html">Services</a></li>
+<li><a href="404.html">Dashboard</a></li>
+<li><a href="404.html">Projects</a></li>
+<li><a href="404.html">Contact</a></li>
+</ul>
+</div>
+
+<!-- SERVICES -->
+<div class="footer-col">
+<h3>Services</h3>
+<ul>
+<li><a href="404.html">SEO Optimization</a></li>
+<li><a href="404.html">Email Marketing</a></li>
+<li><a href="404.html">Video Marketing</a></li>
+<li><a href="404.html">Social Media Marketing</a></li>
+<li><a href="404.html">Investments</a></li>
+</ul>
+</div>
+
+<!-- CONTACT -->
+<div class="footer-col contact">
+<h3>Contact Us</h3>
+
+<div class="contact-box">
+<p><i class="fa-solid fa-location-dot"></i> Bengaluru, India</p>
+<p><i class="fa-solid fa-phone"></i> +91 98765 43210</p>
+<p><i class="fa-solid fa-envelope"></i> support@stacklyDigital.com</p>
+
+<!-- subscribe -->
+<div class="subscribe">
+<input type="email" id="emailBox" placeholder="Enter your email">
+<button onclick="joinNow()">Join</button>
+</div>
+
+<!-- centered download + QR -->
+<div class="app-center">
+
+<div class="apps">
+<a href="404.html" class="app-btn ios"><i class="fab fa-apple"></i> iOS</a>
+<a href="404.html" class="app-btn android"><i class="fab fa-google-play"></i> Android</a>
+</div>
+
+<div class="qr">
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=StacklyBank">
+<p>Scan & Download App</p>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+
+<!-- bottom -->
+<div class="footer-bottom">
+<p>© 2026 Stackly Banking Services</p>
+
+<div class="policies">
+<a href="404.html">Privacy Policy</a>
+<a href="404.html">Terms & Conditions</a>
+</div>
+</div>
+
+</footer>
+<style>
+    /* ===== FOOTER ===== */
+.stackly-footer{
+background:#04142f;
+color:#d6e4ff;
+margin-top:80px;
+padding-top:60px;
+}
+
+.footer-container{
+display:grid;
+grid-template-columns:2fr 1fr 1fr 2fr;
+gap:40px;
+padding:0 6% 50px;
+}
+
+/* logo */
+.footer-logo{
+display:flex;
+align-items:center;
+gap:12px;
+font-size:20px;
+font-weight:600;
+color:#fff;
+margin-bottom:14px;
+}
+.footer-logo img{width:146px;height:auto;border-radius:50%;}
+
+.about-text{line-height:1.7;font-size:14px;}
+
+/* social */
+.social-icons{margin-top:18px;}
+.social-icons a{
+color:#fff;
+margin-right:12px;
+font-size:18px;
+transition:.3s;
+}
+.social-icons a:hover{
+color:#00e0ff;
+transform:translateY(-4px);
+}
+
+/* links */
+.footer-col h3{color:#fff;margin-bottom:18px;}
+.footer-col ul{list-style:none;}
+.footer-col ul li{margin-bottom:10px;}
+.footer-col ul a{
+text-decoration:none;
+color:#d6e4ff;
+transition:.25s;
+}
+.footer-col ul a:hover{
+color:#00e0ff;
+padding-left:6px;
+}
+
+/* contact box */
+.contact-box{
+background:#071b45;
+padding:18px;
+border-radius:12px;
+}
+.contact-box p{
+display:flex;
+align-items:center;
+gap:10px;
+margin-bottom:12px;
+color:#fff;
+font-size:14px;
+}
+.contact-box i{color:#00e0ff;}
+
+/* subscribe */
+.subscribe{
+display:flex;
+border-radius:25px;
+overflow:hidden;
+background:#fff;
+margin-top:12px;
+}
+.subscribe input{
+flex:1;
+border:none;
+padding:11px 14px;
+outline:none;
+}
+.subscribe button{
+background:#00c8ff;
+border:none;
+padding:11px 18px;
+font-weight:600;
+cursor:pointer;
+}
+
+/* CENTER AREA */
+.app-center{
+display:flex;
+flex-direction:column;
+align-items:center;
+margin-top:18px;
+}
+
+/* app buttons centered */
+.apps{
+display:flex;
+gap:12px;
+justify-content:center;
+}
+.app-btn{
+text-decoration:none;
+padding:10px 16px;
+border-radius:22px;
+font-size:14px;
+color:#fff;
+}
+.ios{background:#000;}
+.android{background:#34a853;}
+
+/* QR centered */
+.qr{
+text-align:center;
+margin-top:18px;
+}
+.qr img{width:120px;border-radius:10px;}
+.qr p{font-size:13px;margin-top:6px;}
+
+/* bottom */
+.footer-bottom{
+border-top:1px solid rgba(255,255,255,.15);
+padding:18px 6%;
+display:flex;
+justify-content:space-between;
+flex-wrap:wrap;
+font-size:13px;
+}
+
+.policies a{
+color:#d6e4ff;
+margin-left:18px;
+text-decoration:none;
+}
+.policies a:hover{color:#00e0ff;}
+
+/* MOBILE */
+@media(max-width:900px){
+.footer-container{grid-template-columns:1fr;gap:35px;}
+.footer-bottom{flex-direction:column;gap:10px;}
+.apps{flex-direction:column;align-items:center;}
+}
+</style>
+<script>
+function joinNow(){
+let email=document.getElementById("emailBox").value;
+if(email===""){
+alert("Please enter email");
+return;
+}
+window.location.href="404.html";
+}
+</script>

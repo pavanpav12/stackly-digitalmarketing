@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 | Stackly Digital Marketing</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+
+body{
+min-height:100vh;
+background:linear-gradient(135deg,#020617,#0f172a,#020617);
+color:#fff;
+display:flex;
+align-items:center;
+justify-content:center;
+overflow:hidden;
+}
+
+/* ===== FLOAT HOME BUTTON (DESKTOP) ===== */
+.back-home{
+position:fixed;
+top:20px;
+left:20px;
+display:flex;
+align-items:center;
+gap:8px;
+padding:11px 18px;
+background:rgba(15,23,42,0.85);
+backdrop-filter:blur(12px);
+border:1px solid rgba(255,255,255,0.2);
+border-radius:40px;
+color:#fff;
+text-decoration:none;
+font-size:14px;
+font-weight:600;
+transition:.25s;
+z-index:999999;
+}
+
+.back-home:hover{
+background:#2563eb;
+transform:translateY(-2px);
+box-shadow:0 10px 25px rgba(37,99,235,.5);
+}
+
+.back-home svg{width:18px;height:18px}
+
+/* hide top button on mobile */
+@media(max-width:600px){
+.back-home{display:none;}
+}
+
+/* ===== MAIN LAYOUT ===== */
+.wrapper{
+width:100%;
+max-width:1200px;
+padding:40px 20px;
+text-align:center;
+position:relative;
+z-index:5;
+}
+
+.brand{
+font-size:14px;
+letter-spacing:3px;
+color:#94a3b8;
+margin-bottom:15px;
+}
+
+.big404{
+font-weight:800;
+line-height:1;
+font-size:clamp(70px,14vw,180px);
+background:linear-gradient(90deg,#3b82f6,#22c55e,#06b6d4,#3b82f6);
+background-size:300%;
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+animation:shine 7s linear infinite;
+}
+
+@keyframes shine{
+0%{background-position:0%}
+100%{background-position:300%}
+}
+
+.heading{
+font-size:clamp(20px,3vw,32px);
+margin-top:10px;
+font-weight:600;
+}
+
+.desc{
+margin:15px auto 30px;
+max-width:520px;
+color:#cbd5e1;
+font-size:15px;
+line-height:1.6;
+}
+
+/* ===== GRAPH ===== */
+.graph-box{
+width:100%;
+max-width:520px;
+margin:30px auto;
+position:relative;
+}
+
+.graph-grid{
+position:absolute;
+inset:0;
+background:
+linear-gradient(to right,rgba(255,255,255,.07) 1px,transparent 1px),
+linear-gradient(to top,rgba(255,255,255,.07) 1px,transparent 1px);
+background-size:40px 40px;
+border-radius:10px;
+pointer-events:none;
+}
+
+svg{
+width:100%;
+height:220px;
+pointer-events:none;
+}
+
+.path{
+fill:none;
+stroke:#22c55e;
+stroke-width:4;
+stroke-dasharray:900;
+stroke-dashoffset:900;
+animation:graph 4s ease forwards infinite alternate;
+filter:drop-shadow(0 0 10px #22c55e);
+}
+
+@keyframes graph{
+to{stroke-dashoffset:0}
+}
+
+/* ===== CENTER BUTTON ===== */
+.home-btn{
+display:inline-block;
+margin-top:25px;
+padding:14px 30px;
+border-radius:40px;
+text-decoration:none;
+font-weight:600;
+background:linear-gradient(90deg,#2563eb,#22c55e);
+color:white;
+transition:.3s;
+box-shadow:0 12px 25px rgba(0,0,0,.4);
+}
+
+.home-btn:hover{
+transform:translateY(-3px) scale(1.05);
+box-shadow:0 18px 40px rgba(37,99,235,.6);
+}
+
+/* ===== PARTICLES ===== */
+.particle{
+position:fixed;
+width:5px;
+height:5px;
+background:#3b82f6;
+border-radius:50%;
+opacity:.25;
+pointer-events:none;
+animation:float linear infinite;
+}
+
+@keyframes float{
+from{transform:translateY(100vh)}
+to{transform:translateY(-10vh)}
+}
+
+/* mobile small screens */
+@media(max-width:480px){
+svg{height:170px;}
+.desc{font-size:14px;}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- TOP BUTTON -->
+
+<a href="index.html" class="back-home">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="M15 18l-6-6 6-6"/>
+</svg>
+Home
+</a>
+
+<!-- particles -->
+
+<script>
+for(let i=0;i<25;i++){
+let p=document.createElement("div");
+p.className="particle";
+p.style.left=Math.random()*100+"%";
+p.style.animationDuration=(10+Math.random()*12)+"s";
+p.style.opacity=Math.random()*0.4;
+document.body.appendChild(p);
+}
+</script>
+
+<div class="wrapper">
+
+<div class="brand">STACKLY DIGITAL MARKETING</div>
+
+<div class="big404">404</div>
+
+<div class="heading">We couldn't find that page</div>
+
+<div class="desc">
+The page you are looking for may have been removed or moved.
+But your business growth doesn't have to stop — let Stackly Digital Marketing grow your brand online.
+</div>
+
+<div class="graph-box">
+<div class="graph-grid"></div>
+
+<svg viewBox="0 0 500 220" preserveAspectRatio="none">
+<path class="path"
+d="M0 200
+L60 180
+L120 170
+L180 140
+L240 150
+L300 100
+L360 120
+L420 70
+L500 40"/>
+</svg>
+</div>
+
+<a href="index.html" class="home-btn">Go To Homepage</a>
+
+</div>
+
+</body>
+</html>

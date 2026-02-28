@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stackly Bank</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:#f4f7fb;overflow-x:hidden;}
+
+/* ===== TOPBAR ===== */
+/* ===== TOP BAR ===== */
+.topbar{
+background:linear-gradient(90deg,#061a40,#0b2d6b);
+color:#fff;
+position:sticky;
+top:0;              /* IMPORTANT */
+z-index:1000;       /* above navbar */
+padding:7px 5%;
+display:flex;
+align-items:center;
+justify-content:space-between;
+flex-wrap:wrap;
+font-size:13px;
+height:38px;        /* FIXED HEIGHT (needed) */
+}
+
+/* ===== NAVBAR ===== */
+.navbar{
+background:#fff;
+height:70px;
+padding:0 5%;
+display:flex;
+align-items:center;
+justify-content:space-between;
+box-shadow:0 4px 18px rgba(0,0,0,.08);
+position:sticky;
+top:38px;           /* SAME as topbar height */
+z-index:999;
+}
+
+.top-left{display:flex;gap:18px;}
+.top-left i{color:#00e0ff;}
+
+.announcement{flex:1;overflow:hidden;margin:0 15px;}
+.ticker{white-space:nowrap;display:inline-block;animation:ticker 18s linear infinite;}
+@keyframes ticker{0%{transform:translateX(100%);}100%{transform:translateX(-100%);}}
+
+.top-right a{
+color:#fff;
+margin-left:12px;
+font-size:15px;
+transition:.3s;
+}
+.top-right a:hover{
+color:#00e0ff;
+transform:translateY(-3px) scale(1.15);
+}
+
+/* ===== NAVBAR ===== */
+
+/* logo */
+.logo{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:700;color:#0b2d6b;}
+.logo img{width:172px;height:auto;border-radius:50%;}
+
+/* nav */
+.nav-links{list-style:none;display:flex;gap:20px;align-items:center;}
+.nav-links a{
+text-decoration:none;color:#333;font-weight:500;padding:8px 14px;border-radius:20px;
+transition:.25s;
+}
+.nav-links a:hover{background:#eef4ff;color:#0b2d6b;}
+
+/* dropdown */
+.nav-links li{position:relative;}
+.dropdown{
+position:absolute;
+top:60px;
+left:0;
+background:#fff;
+box-shadow:0 12px 25px rgba(0,0,0,.12);
+border-radius:10px;
+overflow:hidden;
+max-height:0;
+transition:max-height .35s ease;
+}
+.dropdown a{display:block;padding:12px 14px;}
+.dropdown.open{max-height:300px;}
+
+.arrow{
+margin-left:6px;
+transition:.3s;
+}
+.arrow.rotate{transform:rotate(180deg);}
+
+/* buttons */
+.buttons{display:flex;gap:10px;}
+.buttons a{
+padding:8px 16px;
+border-radius:22px;
+font-weight:600;
+text-decoration:none;
+font-size:14px;
+}
+.download{background:linear-gradient(45deg,#00d4ff,#0b2d6b);color:#fff;}
+.login{background:#0b2d6b;color:#fff;}
+.contact{border:2px solid #0b2d6b;color:#0b2d6b;}
+
+/* hamburger */
+.hamburger{display:none;font-size:26px;cursor:pointer;color:#0b2d6b;}
+
+/* ===== MOBILE MENU ===== */
+.mobile-menu{
+position:fixed;
+top:0;
+left:-100%;
+width:100%;
+height:100%;
+background:#061a40;
+padding:90px 25px;
+transition:.45s ease;
+z-index:2000;
+overflow-y:auto;
+}
+.mobile-menu.active{left:0;}
+
+.close-btn{
+position:absolute;
+top:22px;
+right:25px;
+font-size:28px;
+color:#fff;
+cursor:pointer;
+}
+
+/* mobile links */
+.mobile-links a{
+display:flex;
+align-items:center;
+gap:14px;
+color:#fff;
+text-decoration:none;
+font-size:18px;
+padding:14px 8px;
+border-bottom:1px solid rgba(255,255,255,.15);
+}
+
+/* mobile dropdown */
+.mobile-dropdown{
+max-height:0;
+overflow:hidden;
+transition:max-height .35s ease;
+padding-left:35px;
+}
+.mobile-dropdown a{font-size:16px;padding:10px 0;color:#cfe3ff;}
+.mobile-dropdown.open{max-height:200px;}
+
+/* mobile buttons */
+.mobile-buttons{margin-top:18px;display:flex;flex-direction:column;gap:12px;}
+.mobile-buttons a{
+text-align:center;
+padding:12px;
+border-radius:25px;
+background:#0b2d6b;
+color:#fff;
+text-decoration:none;
+}
+.mobile-buttons a:first-child{background:linear-gradient(45deg,#00d4ff,#0b2d6b);}
+
+/* social animation */
+.mobile-social{
+display:flex;
+justify-content:center;
+gap:18px;
+margin-top:25px;
+padding-top:18px;
+border-top:1px solid rgba(255,255,255,.2);
+}
+.mobile-social a{
+color:#fff;
+font-size:22px;
+transition:.3s;
+}
+.mobile-social a:hover{transform:translateY(-5px) scale(1.2);color:#00e0ff;}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:950px){
+.nav-links,.buttons{display:none;}
+.hamburger{display:block;}
+.topbar{flex-direction:column;text-align:center;gap:5px;}
+.announcement{display:none;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+<div class="top-left">
+<span><i class="fa-solid fa-phone"></i> +91 98765 43210</span>
+<span><i class="fa-solid fa-envelope"></i> support@stacklydigital.com</span>
+</div>
+
+<div class="announcement">
+<div class="ticker">
+Stackly Digital Marketing helps businesses grow online through SEO, social media promotion, and targeted advertising.
+</div>
+</div>
+
+<div class="top-right">
+</div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+<div class="logo">
+<img src="stacklylogo (3).webp"> 
+</div>
+
+<ul class="nav-links">
+<li>
+<a href="index.html" onclick="toggleDesktopDropdown(event)">
+Home <i class="fa-solid fa-chevron-down arrow" id="deskArrow"></i>
+</a>
+<div class="dropdown" id="deskDropdown">
+    <a href="index.html">Home 1</a>
+<a href="home.html">Home 2</a>
+
+</div>
+</li>
+<li><a href="solution.html">Solutions</a></li>
+<li><a href="ourthinking.html">Our thinking</a></li>
+<li><a href="career.html">Career</a></li>
+<li><a href="Blog.html">Blog</a></li>
+<li><a href="contact1.html">Contact</a></li>
+
+</ul>
+
+<div class="buttons">
+
+<a href="login2.html" class="login">Login</a>
+
+</div>
+
+<div class="hamburger" onclick="openMenu()">
+<i class="fa-solid fa-bars"></i>
+</div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+<div class="close-btn" onclick="closeMenu()"><i class="fa-solid fa-xmark"></i></div>
+
+<div class="mobile-links">
+<a href="4041.html" onclick="toggleMobileDropdown(event)">
+<i class="fa-solid fa-house"></i> Home <i class="fa-solid fa-chevron-down arrow" id="mobArrow"></i>
+</a>
+
+<div class="mobile-dropdown" id="mobDropdown">
+<a href="index.html">Home 1</a>
+<a href="home.html">Home 2</a>
+
+</div>
+
+<a href="solution.html"><i class="fa-solid fa-credit-card"></i> Solutions</a>
+<a href="ourthinking.html"><i class="fa-solid fa-paper-plane"></i>Our thinking</a>
+<a href="career.html"><i class="fa-solid fa-hand-holding-dollar"></i> Career</a>
+<a href="Blog.html"><i class="fa-solid fa-paper-plane"></i> Blog</a>
+<a href="contact1.html"><i class="fa-solid fa-tags"></i> Contact</a>
+</div>
+
+<div class="mobile-buttons">
+<a href="4041.html">Download App</a>
+<a href="login2.html">Login</a>
+
+</div>
+
+<div class="mobile-social">
+<a href="4041.html"><i class="fab fa-facebook-f"></i></a>
+<a href="4041.html"><i class="fab fa-instagram"></i></a>
+<a href="4041.html"><i class="fab fa-x-twitter"></i></a>
+<a href="4041.html"><i class="fab fa-linkedin-in"></i></a>
+</div>
+</div>
+
+<script>
+const menu=document.getElementById("mobileMenu");
+
+function openMenu(){
+menu.classList.add("active");
+document.body.style.overflow="hidden";
+}
+function closeMenu(){
+menu.classList.remove("active");
+document.body.style.overflow="auto";
+}
+
+/* desktop dropdown */
+function toggleDesktopDropdown(e){
+e.preventDefault();
+document.getElementById("deskDropdown").classList.toggle("open");
+document.getElementById("deskArrow").classList.toggle("rotate");
+}
+
+/* mobile dropdown */
+function toggleMobileDropdown(e){
+e.preventDefault();
+document.getElementById("mobDropdown").classList.toggle("open");
+document.getElementById("mobArrow").classList.toggle("rotate");
+}
+</script>
+
+
+
+
+
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+
+</body>
+</html>
+
+
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* ===== UNIQUE CONTACT SYSTEM ===== */
+#stkFormZ11 *{
+box-sizing:border-box;
+margin:0;
+padding:0;
+font-family:Poppins,sans-serif;
+}
+
+#stkFormZ11{
+background:#f4f7fb;
+padding:40px 15px;
+}
+
+#stkFormZ11 .box{
+max-width:1000px;
+margin:auto;
+background:#fff;
+padding:35px;
+border-radius:12px;
+box-shadow:0 8px 30px rgba(0,0,0,.08);
+}
+
+#stkFormZ11 h1{
+text-align:center;
+margin-bottom:5px;
+}
+
+#stkFormZ11 p{
+text-align:center;
+color:#666;
+margin-bottom:25px;
+}
+
+#stkFormZ11 .wrap{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:30px;
+}
+
+#stkFormZ11 .row{
+display:flex;
+gap:15px;
+margin-bottom:18px;
+}
+
+#stkFormZ11 input,
+#stkFormZ11 textarea{
+width:100%;
+padding:12px 14px;
+border:1px solid #d9dfea;
+border-radius:8px;
+font-size:14px;
+outline:none;
+}
+
+#stkFormZ11 input:focus,
+#stkFormZ11 textarea:focus{
+border-color:#2563eb;
+box-shadow:0 0 0 2px rgba(37,99,235,.15);
+}
+
+#stkFormZ11 textarea{
+height:260px;
+resize:none;
+}
+
+#stkFormZ11 .error{
+color:#e11d48;
+font-size:12px;
+margin-top:4px;
+min-height:14px;
+}
+
+#stkFormZ11 button{
+background:#2563eb;
+color:#fff;
+border:none;
+padding:13px;
+width:100%;
+border-radius:8px;
+font-weight:600;
+cursor:pointer;
+}
+
+#stkFormZ11 button:hover{
+background:#1e4ed8;
+}
+
+@media(max-width:768px){
+#stkFormZ11 .wrap{grid-template-columns:1fr}
+#stkFormZ11 textarea{height:160px}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="stkFormZ11">
+<div class="box">
+
+<h1>Contact Us</h1>
+<p>All fields are mandatory</p>
+
+<form onsubmit="return validateStackly()" novalidate>
+
+<div class="wrap">
+
+<!-- LEFT -->
+
+<div>
+
+<div class="row">
+<div style="width:100%">
+<input id="fname" type="text" placeholder="First Name*" oninput="lettersOnly(this)">
+<div id="fnameErr" class="error"></div>
+</div>
+
+<div style="width:100%">
+<input id="lname" type="text" placeholder="Last Name*" oninput="lettersOnly(this)">
+<div id="lnameErr" class="error"></div>
+</div>
+</div>
+
+<div class="row">
+<input id="email" type="email" placeholder="Email*">
+</div>
+
+<div class="row">
+<input id="company" type="text" placeholder="Company*">
+</div>
+
+<div class="row">
+<input id="job" type="text" placeholder="Job Title*">
+</div>
+
+<div class="row">
+<input id="phone" type="tel" placeholder="Phone Number*" maxlength="10" oninput="numbersOnly(this)">
+<div id="phoneErr" class="error"></div>
+</div>
+
+<div class="row">
+<label><input type="checkbox" id="agree"> I agree to privacy policy</label>
+<div id="agreeErr" class="error"></div>
+</div>
+
+<button type="submit">Submit</button>
+
+</div>
+
+<!-- RIGHT -->
+
+<div>
+<textarea id="message" placeholder="How can we help you?*"></textarea>
+<div id="msgErr" class="error"></div>
+</div>
+
+</div>
+</form>
+
+</div>
+</div>
+
+<script>
+
+/* letters only */
+function lettersOnly(el){
+el.value = el.value.replace(/[^A-Za-z ]/g,'');
+}
+
+/* numbers only 10 digits */
+function numbersOnly(el){
+el.value = el.value.replace(/[^0-9]/g,'');
+if(el.value.length>10){
+el.value = el.value.slice(0,10);
+}
+}
+
+/* main validation */
+function validateStackly(){
+
+let valid=true;
+
+/* values */
+let fname=fnameValue("fname");
+let lname=fnameValue("lname");
+let email=fnameValue("email");
+let company=fnameValue("company");
+let job=fnameValue("job");
+let phone=fnameValue("phone");
+let msg=fnameValue("message");
+
+/* first name */
+if(fname===""){
+showErr("fnameErr","Enter first name");
+valid=false;
+}else clearErr("fnameErr");
+
+/* last name */
+if(lname===""){
+showErr("lnameErr","Enter last name");
+valid=false;
+}else clearErr("lnameErr");
+
+/* email */
+if(email===""){
+alert("Enter email");
+valid=false;
+}
+
+/* company */
+if(company===""){
+alert("Enter company name");
+valid=false;
+}
+
+/* job */
+if(job===""){
+alert("Enter job title");
+valid=false;
+}
+
+/* message */
+if(msg===""){
+showErr("msgErr","Enter your message");
+valid=false;
+}else clearErr("msgErr");
+
+/* phone */
+if(!/^[0-9]{10}$/.test(phone)){
+showErr("phoneErr","Phone must be 10 digits");
+valid=false;
+}else clearErr("phoneErr");
+
+/* checkbox */
+if(!document.getElementById("agree").checked){
+showErr("agreeErr","Accept privacy policy");
+valid=false;
+}else clearErr("agreeErr");
+
+/* redirect */
+if(valid){
+window.location.href="4041.html";
+return false;
+}
+
+return false;
+}
+
+function fnameValue(id){
+return document.getElementById(id).value.trim();
+}
+
+function showErr(id,msg){
+document.getElementById(id).innerText=msg;
+}
+
+function clearErr(id){
+document.getElementById(id).innerText="";
+}
+
+</script>
+</body>
+</html>
+
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,Arial;}
+
+#officePage{
+display:flex;
+height:100vh;
+}
+
+/* LEFT PANEL */
+#officeSidebar{
+width:35%;
+background:#f3efe7;
+padding:25px;
+overflow-y:auto;
+}
+
+#officeSidebar h2{
+margin-bottom:20px;
+}
+
+.searchBox{
+position:relative;
+margin-bottom:25px;
+}
+
+.searchBox input{
+width:100%;
+padding:12px;
+border:none;
+border-bottom:2px solid #444;
+background:transparent;
+outline:none;
+}
+
+.country{
+padding:14px 5px;
+border-bottom:1px solid #ddd;
+cursor:pointer;
+}
+
+.country:hover{
+color:#0b2a63;
+font-weight:600;
+}
+
+.notfound{
+color:red;
+margin-top:10px;
+display:none;
+}
+
+/* MAP */
+#map{
+width:65%;
+height:100%;
+}
+
+/* MOBILE */
+@media(max-width:900px){
+#officePage{flex-direction:column;}
+#officeSidebar{width:100%;height:40%;}
+#map{width:100%;height:60%;}
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="officePage">
+
+<!-- LEFT SIDE -->
+<div id="officeSidebar">
+
+<h2>Stackly Offices</h2>
+
+<div class="searchBox">
+<input type="text" id="searchCountry" placeholder="Enter country name...">
+</div>
+
+<div id="countryList">
+<div class="country" onclick="showCountry('usa')">United States</div>
+<div class="country" onclick="showCountry('india')">India</div>
+<div class="country" onclick="showCountry('uk')">United Kingdom</div>
+<div class="country" onclick="showCountry('uae')">UAE</div>
+<div class="country" onclick="showCountry('australia')">Australia</div>
+</div>
+
+<div class="notfound" id="notFound">No office found in this country</div>
+
+</div>
+
+<!-- MAP -->
+<div id="map"></div>
+
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+
+/* MAP INIT */
+var map=L.map('map').setView([20,0],2);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+maxZoom:19
+}).addTo(map);
+
+var marker;
+
+/* COUNTRY COORDINATES */
+const offices={
+usa:{coords:[37.0902,-95.7129],name:"United States Office"},
+india:{coords:[20.5937,78.9629],name:"India Office"},
+uk:{coords:[51.5072,-0.1276],name:"UK Office"},
+uae:{coords:[25.2048,55.2708],name:"UAE Office"},
+australia:{coords:[-25.2744,133.7751],name:"Australia Office"}
+};
+
+/* SHOW COUNTRY */
+function showCountry(country){
+
+document.getElementById("notFound").style.display="none";
+
+if(marker) map.removeLayer(marker);
+
+let office=offices[country];
+
+map.setView(office.coords,5);
+
+marker=L.marker(office.coords).addTo(map)
+.bindPopup(office.name)
+.openPopup();
+}
+
+/* SEARCH FUNCTION */
+document.getElementById("searchCountry").addEventListener("keyup",function(){
+
+let value=this.value.toLowerCase().trim();
+
+let found=false;
+
+for(let key in offices){
+if(key===value || offices[key].name.toLowerCase().includes(value)){
+showCountry(key);
+found=true;
+break;
+}
+}
+
+if(!found && value.length>0){
+document.getElementById("notFound").style.display="block";
+}
+
+});
+
+</script>
+
+</body>
+</html>
+
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* ===== UNIQUE STACKLY TELECOM SECTION ===== */
+#stk-telecom-section{
+background:#88b978;
+padding:90px 6%;
+font-family:Poppins,sans-serif;
+}
+
+.stk-tele-wrap{
+display:flex;
+align-items:center;
+gap:60px;
+}
+
+/* LEFT CONTENT */
+.stk-tele-left{
+flex:1.2;
+}
+
+.stk-tele-left h1{
+font-size:48px;
+color:#2c2c2c;
+margin-bottom:20px;
+}
+
+.stk-tele-left p{
+color:#2c2c2c;
+line-height:1.8;
+max-width:520px;
+margin-bottom:35px;
+}
+
+/* BUTTON */
+.stk-tele-btn{
+display:inline-block;
+background:#f0f0f0;
+padding:14px 28px;
+border-radius:28px;
+text-decoration:none;
+color:#000;
+font-weight:600;
+transition:.3s;
+}
+
+.stk-tele-btn:hover{
+background:#000;
+color:#fff;
+}
+
+/* OFFERINGS */
+.stk-tele-right{
+flex:1;
+}
+
+.stk-tele-right h3{
+margin-bottom:15px;
+color:#2c2c2c;
+}
+
+.stk-offer{
+list-style:none;
+}
+
+.stk-offer li{
+margin:12px 0;
+}
+
+.stk-offer a{
+text-decoration:none;
+color:#1b1b1b;
+font-weight:600;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:6px 0;
+transition:.25s;
+}
+
+.stk-offer a:hover{
+color:#ffffff;
+padding-left:8px;
+}
+
+/* ARROW */
+.arrow{
+font-size:18px;
+}
+
+/* IMAGE */
+.stk-tele-image{
+flex:1;
+text-align:right;
+}
+
+.stk-tele-image img{
+max-width:320px;
+height:auto;
+}
+
+/* MOBILE */
+@media(max-width:900px){
+.stk-tele-wrap{
+flex-direction:column;
+text-align:center;
+}
+
+.stk-tele-image{
+text-align:center;
+}
+
+.stk-tele-left h1{
+font-size:32px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<section id="stk-telecom-section">
+
+<div class="stk-tele-wrap">
+
+<!-- LEFT TEXT -->
+<div class="stk-tele-left">
+
+<h1>Telecom & Media</h1>
+
+<p>
+Stackly Digital Marketing develops modern communication and digital media
+solutions that help brands connect with audiences through innovative
+technology and engaging content platforms.
+</p>
+
+<a href="4041.html" class="stk-tele-btn">Learn more</a>
+
+</div>
+
+<!-- OFFERINGS -->
+<div class="stk-tele-right">
+
+<h3>Our Offerings</h3>
+
+<ul class="stk-offer">
+<li><a href="4041.html">Network and Telecom <span class="arrow">→</span></a></li>
+<li><a href="4041.html">Enterprise Communication Services <span class="arrow">→</span></a></li>
+<li><a href="4041.html">Software Product Engineering <span class="arrow">→</span></a></li>
+<li><a href="4041.html">Embedded Technology Solutions <span class="arrow">→</span></a></li>
+<li><a href="4041.html">Media, Entertainment & Gaming <span class="arrow">→</span></a></li>
+</ul>
+
+</div>
+
+<!-- IMAGE -->
+<div class="stk-tele-image">
+<img src="digital18.webp">
+</div>
+
+</div>
+
+</section>
+
+</body>
+</html>
+
+
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* UNIQUE WRAPPER */
+#stk-team-section{
+background:#0a2a4a;
+padding:80px 6%;
+font-family:Poppins,sans-serif;
+}
+
+#stk-team-section h2{
+color:white;
+text-align:center;
+margin-bottom:50px;
+font-size:40px;
+}
+
+/* GRID */
+.stk-team-grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:30px;
+}
+
+/* CARD */
+.stk-member-card{
+background:#ffffff;
+border-radius:12px;
+overflow:hidden;
+transition:.3s;
+}
+
+.stk-member-card:hover{
+transform:translateY(-8px);
+}
+
+/* IMAGE */
+.stk-member-img img{
+width:100%;
+height:260px;
+object-fit:cover;
+}
+
+/* CONTENT */
+.stk-member-info{
+padding:22px;
+text-align:center;
+}
+
+.stk-member-info h3{
+margin-bottom:5px;
+color:#0b2a63;
+}
+
+.stk-role{
+color:#ff6a00;
+font-size:14px;
+margin-bottom:12px;
+}
+
+.stk-contact{
+font-size:14px;
+margin:4px 0;
+color:#333;
+}
+
+/* SOCIAL ICONS */
+.stk-social{
+margin-top:15px;
+display:flex;
+justify-content:center;
+gap:12px;
+}
+
+.stk-social a{
+width:36px;
+height:36px;
+border-radius:50%;
+background:#0b2a63;
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+text-decoration:none;
+font-weight:600;
+transition:.3s;
+}
+
+.stk-social a:hover{
+background:#ff6a00;
+}
+
+/* MOBILE */
+@media(max-width:900px){
+.stk-team-grid{
+grid-template-columns:1fr 1fr;
+}
+}
+
+@media(max-width:500px){
+.stk-team-grid{
+grid-template-columns:1fr;
+}
+}
+
+</style>
+</head>
+
+<body>
+
+<section id="stk-team-section">
+
+<h2>Contact Our Team</h2>
+
+<div class="stk-team-grid">
+
+<!-- MEMBER 1 -->
+<div class="stk-member-card">
+<div class="stk-member-img">
+<img src="hr6.webp">
+</div>
+<div class="stk-member-info">
+<h3>Anita Sharma</h3>
+<div class="stk-role">HR Manager</div>
+<div class="stk-contact">📞 +91 9876543210</div>
+<div class="stk-contact">✉ hr@stackly.com</div>
+<div class="stk-social">
+<a href="4041.html">F</a>
+<a href="4041.html">in</a>
+<a href="4041.html">X</a>
+</div>
+</div>
+</div>
+
+<!-- MEMBER 2 -->
+<div class="stk-member-card">
+<div class="stk-member-img">
+<img src="hr13.webp">
+</div>
+<div class="stk-member-info">
+<h3>Rahul Verma</h3>
+<div class="stk-role">Project Manager</div>
+<div class="stk-contact">📞 +91 9123456780</div>
+<div class="stk-contact">✉ rahul@stackly.com</div>
+<div class="stk-social">
+<a href="4041.html">F</a>
+<a href="4041.html">in</a>
+<a href="4041.html">X</a>
+</div>
+</div>
+</div>
+
+<!-- MEMBER 3 -->
+<div class="stk-member-card">
+<div class="stk-member-img">
+<img src="hr12.webp">
+</div>
+<div class="stk-member-info">
+<h3>Sneha Patel</h3>
+<div class="stk-role">Marketing Lead</div>
+<div class="stk-contact">📞 +91 9012345678</div>
+<div class="stk-contact">✉ sneha@stackly.com</div>
+<div class="stk-social">
+<a href="4041.html">F</a>
+<a href="4041.html">in</a>
+<a href="4041.html">X</a>
+</div>
+</div>
+</div>
+
+<!-- MEMBER 4 -->
+<div class="stk-member-card">
+<div class="stk-member-img">
+<img src="hr11.webp">
+</div>
+<div class="stk-member-info">
+<h3>Vikram Reddy</h3>
+<div class="stk-role">Web Developer</div>
+<div class="stk-contact">📞 +91 9988776655</div>
+<div class="stk-contact">✉ vikram@stackly.com</div>
+<div class="stk-social">
+<a href="4041.html">F</a>
+<a href="4041.html">in</a>
+<a href="4041.html">X</a>
+</div>
+</div>
+</div>
+
+</div>
+
+</section>
+
+</body>
+</html>
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+body{
+background:#000;
+}
+
+/* OUTER BACKGROUND GRADIENT */
+#stacklyJoinSection{
+padding:100px 20px;
+background:linear-gradient(135deg,#000000,#ff7a00,#ffffff);
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+/* CARD */
+.join-card{
+max-width:900px;
+background:#ffffff;
+padding:60px 70px;
+border-radius:12px;
+box-shadow:0 20px 60px rgba(0,0,0,.35);
+text-align:left;
+}
+
+/* HEADING */
+.join-card h2{
+font-size:40px;
+color:#000;
+margin-bottom:20px;
+}
+
+/* TEXT */
+.join-card p{
+font-size:17px;
+line-height:1.7;
+color:#444;
+margin-bottom:30px;
+max-width:700px;
+}
+
+/* BUTTON */
+.join-btn{
+display:inline-block;
+background:#ff7a00;
+color:#fff;
+padding:15px 32px;
+border-radius:40px;
+text-decoration:none;
+font-weight:600;
+transition:.3s;
+position:relative;
+}
+
+.join-btn::after{
+content:"➜";
+margin-left:10px;
+transition:.3s;
+}
+
+.join-btn:hover{
+background:#000;
+transform:translateY(-3px);
+}
+
+.join-btn:hover::after{
+margin-left:16px;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+
+.join-card{
+padding:40px 25px;
+text-align:center;
+}
+
+.join-card h2{
+font-size:28px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<section id="stacklyJoinSection">
+
+<div class="join-card">
+
+<h2>Join Stackly Digital Marketing Community</h2>
+
+<p>
+Haven’t found the right opportunity yet? Stay connected with Stackly Digital Marketing.
+Receive updates about job openings, internships, training programs and company events.
+Grow your skills and career with our creative marketing team.
+</p>
+
+<a href="4041.html" class="join-btn">Sign Up</a>
+
+</div>
+
+</section>
+
+<!-- ===== STACKLY FOOTER ===== -->
+<footer class="stackly-footer">
+
+<div class="footer-container">
+
+<!-- ABOUT -->
+<div class="footer-col">
+<div class="footer-logo">
+<img src="stacklylogo (1).webp">
+<span></span>
+</div>
+
+<p class="about-text">
+Stackly Digital Marketing helps businesses grow online through SEO, social media promotion, and targeted advertising.
+</p>
+
+<div class="social-icons">
+<a href="4041.html"><i class="fab fa-facebook-f"></i></a>
+<a href="4041.html"><i class="fab fa-instagram"></i></a>
+<a href="4041.html"><i class="fab fa-x-twitter"></i></a>
+<a href="4041.html"><i class="fab fa-linkedin-in"></i></a>
+</div>
+</div>
+
+<!-- QUICK LINKS -->
+<div class="footer-col">
+<h3>Quick Links</h3>
+<ul>
+<li><a href="home.html">Home</a></li>
+<li><a href="solution.html">Solution</a></li>
+<li><a href="ourthinking.html">Our Thinking</a></li>
+<li><a href="Blog.html">Blog</a></li>
+<li><a href="contact1.html">Contact</a></li>
+</ul>
+</div>
+
+<!-- SERVICES -->
+<div class="footer-col">
+<h3>Services</h3>
+<ul>
+<li><a href="4041.html">SEO Optimization</a></li>
+<li><a href="4041.html">Email Marketing</a></li>
+<li><a href="4041.html">Video Marketing</a></li>
+<li><a href="4041.html">Social Media Marketing</a></li>
+<li><a href="4041.html">Investments</a></li>
+</ul>
+</div>
+
+<!-- CONTACT -->
+<div class="footer-col contact">
+<h3>Contact Us</h3>
+
+<div class="contact-box">
+<p><i class="fa-solid fa-location-dot"></i> Bengaluru, India</p>
+<p><i class="fa-solid fa-phone"></i> +91 98765 43210</p>
+<p><i class="fa-solid fa-envelope"></i> support@stacklyDigital.com</p>
+
+<!-- subscribe -->
+<div class="subscribe">
+<input type="email" id="emailBox" placeholder="Enter your email">
+<button onclick="joinNow()">Join</button>
+</div>
+
+<!-- centered download + QR -->
+<div class="app-center">
+
+<div class="apps">
+<a href="4041.html" class="app-btn ios"><i class="fab fa-apple"></i> iOS</a>
+<a href="4041.html" class="app-btn android"><i class="fab fa-google-play"></i> Android</a>
+</div>
+
+<div class="qr">
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=StacklyBank">
+<p>Scan & Download App</p>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+
+<!-- bottom -->
+<div class="footer-bottom">
+<p>© 2026 Stackly Banking Services</p>
+
+<div class="policies">
+<a href="4041.html">Privacy Policy</a>
+<a href="4041.html">Terms & Conditions</a>
+</div>
+</div>
+
+</footer>
+<style>
+    /* ===== FOOTER ===== */
+.stackly-footer{
+background:#04142f;
+color:#d6e4ff;
+margin-top:80px;
+padding-top:60px;
+}
+
+.footer-container{
+display:grid;
+grid-template-columns:2fr 1fr 1fr 2fr;
+gap:40px;
+padding:0 6% 50px;
+}
+
+/* logo */
+.footer-logo{
+display:flex;
+align-items:center;
+gap:12px;
+font-size:20px;
+font-weight:600;
+color:#fff;
+margin-bottom:14px;
+}
+.footer-logo img{width:146px;height:auto;border-radius:50%;}
+
+.about-text{line-height:1.7;font-size:14px;}
+
+/* social */
+.social-icons{margin-top:18px;}
+.social-icons a{
+color:#fff;
+margin-right:12px;
+font-size:18px;
+transition:.3s;
+}
+.social-icons a:hover{
+color:#00e0ff;
+transform:translateY(-4px);
+}
+
+/* links */
+.footer-col h3{color:#fff;margin-bottom:18px;}
+.footer-col ul{list-style:none;}
+.footer-col ul li{margin-bottom:10px;}
+.footer-col ul a{
+text-decoration:none;
+color:#d6e4ff;
+transition:.25s;
+}
+.footer-col ul a:hover{
+color:#00e0ff;
+padding-left:6px;
+}
+
+/* contact box */
+.contact-box{
+background:#071b45;
+padding:18px;
+border-radius:12px;
+}
+.contact-box p{
+display:flex;
+align-items:center;
+gap:10px;
+margin-bottom:12px;
+color:#fff;
+font-size:14px;
+}
+.contact-box i{color:#00e0ff;}
+
+/* subscribe */
+.subscribe{
+display:flex;
+border-radius:25px;
+overflow:hidden;
+background:#fff;
+margin-top:12px;
+}
+.subscribe input{
+flex:1;
+border:none;
+padding:11px 14px;
+outline:none;
+}
+.subscribe button{
+background:#00c8ff;
+border:none;
+padding:11px 18px;
+font-weight:600;
+cursor:pointer;
+}
+
+/* CENTER AREA */
+.app-center{
+display:flex;
+flex-direction:column;
+align-items:center;
+margin-top:18px;
+}
+
+/* app buttons centered */
+.apps{
+display:flex;
+gap:12px;
+justify-content:center;
+}
+.app-btn{
+text-decoration:none;
+padding:10px 16px;
+border-radius:22px;
+font-size:14px;
+color:#fff;
+}
+.ios{background:#000;}
+.android{background:#34a853;}
+
+/* QR centered */
+.qr{
+text-align:center;
+margin-top:18px;
+}
+.qr img{width:120px;border-radius:10px;}
+.qr p{font-size:13px;margin-top:6px;}
+
+/* bottom */
+.footer-bottom{
+border-top:1px solid rgba(255,255,255,.15);
+padding:18px 6%;
+display:flex;
+justify-content:space-between;
+flex-wrap:wrap;
+font-size:13px;
+}
+
+.policies a{
+color:#d6e4ff;
+margin-left:18px;
+text-decoration:none;
+}
+.policies a:hover{color:#00e0ff;}
+
+/* MOBILE */
+@media(max-width:900px){
+.footer-container{grid-template-columns:1fr;gap:35px;}
+.footer-bottom{flex-direction:column;gap:10px;}
+.apps{flex-direction:column;align-items:center;}
+}
+</style>
+<script>
+function joinNow(){
+let email=document.getElementById("emailBox").value;
+if(email===""){
+alert("Please enter email");
+return;
+}
+window.location.href="4041.html";
+}
+</script>

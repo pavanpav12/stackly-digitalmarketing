@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stackly Secure Access</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+
+/* ===== BACKGROUND ===== */
+body{
+min-height:100vh;
+background:
+linear-gradient(rgba(0,15,40,.75),rgba(0,15,40,.85)),
+url("andrea-de-santis-aOve8xFnjdM-unsplash.webp");
+background-size:cover;
+background-position:center;
+color:#fff;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+}
+
+/* ===== CONTAINER ===== */
+.container{
+width:95%;
+max-width:720px;
+}
+
+/* LOGO */
+.logo{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:12px;
+margin-bottom:25px;
+}
+.logo img{
+width:155px;
+border-radius:50%;
+}
+.logo h2{
+font-weight:600;
+letter-spacing:1px;
+}
+
+/* TITLE */
+h1{
+font-size:48px;
+margin-bottom:18px;
+font-weight:500;
+}
+
+.desc{
+line-height:1.7;
+margin-bottom:40px;
+opacity:.9;
+}
+
+/* BUTTON */
+.main-btn{
+background:#e5e5e5;
+color:#000;
+padding:16px 60px;
+font-size:18px;
+border:none;
+cursor:pointer;
+transition:.3s;
+margin:6px;
+}
+.main-btn:hover{
+background:#fff;
+transform:translateY(-3px);
+}
+
+/* LINKS */
+.links{
+margin-top:25px;
+font-size:14px;
+opacity:.9;
+}
+
+.create{
+margin-top:40px;
+cursor:pointer;
+text-decoration:underline;
+}
+
+/* ===== FORM POPUP ===== */
+.form-box{
+position:fixed;
+top:0;left:0;
+width:100%;height:100%;
+background:rgba(0,0,0,.7);
+display:none;
+align-items:center;
+justify-content:center;
+}
+
+.form{
+background:#fff;
+color:#000;
+padding:30px;
+width:90%;
+max-width:400px;
+border-radius:10px;
+text-align:left;
+animation:pop .35s ease;
+}
+
+@keyframes pop{
+from{transform:scale(.7);opacity:0;}
+to{transform:scale(1);opacity:1;}
+}
+
+.form h3{
+text-align:center;
+margin-bottom:20px;
+}
+
+.form input{
+width:100%;
+padding:12px;
+margin-bottom:14px;
+border:1px solid #ccc;
+outline:none;
+}
+
+.submit{
+width:100%;
+padding:12px;
+background:#0b2d6b;
+color:#fff;
+border:none;
+cursor:pointer;
+font-weight:600;
+}
+
+.close{
+position:absolute;
+right:20px;
+top:15px;
+font-size:22px;
+cursor:pointer;
+color:#fff;
+}
+
+/* mobile */
+@media(max-width:600px){
+h1{font-size:32px;}
+.desc{font-size:14px;}
+.main-btn{padding:14px 30px;}
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="logo">
+<img src="stacklylogo (1).webp">
+<h2>STACKLY Digital Marketing</h2>
+</div>
+
+<h1>Welcome to Stackly</h1>
+
+<p class="desc">
+Stackly Digital Marketing offers professional online promotion services such as SEO, social media management, and advertising campaigns to help businesses reach more customers, improve brand awareness, and grow faster in the digital world.
+</p>
+
+<button class="main-btn" onclick="openLogin()">Sign in</button> <button class="main-btn" onclick="goHome()">Back To Home</button>
+
+<div class="links">
+Having trouble signing in? Contact Stackly Support.
+</div>
+
+<div class="create" onclick="openRegister()">No account? Create one!</div>
+
+</div>
+
+<!-- LOGIN FORM -->
+
+<div class="form-box" id="loginBox">
+<div class="close" onclick="closeForm()">✕</div>
+<form class="form" onsubmit="return loginSubmit(event)">
+<h3>Login</h3>
+
+<input type="text" id="loginUser" placeholder="User ID" required>
+<input type="password" id="loginPass" placeholder="Password" required>
+
+<button class="submit" type="submit">Login</button>
+
+</form>
+</div>
+
+<!-- REGISTER FORM -->
+
+<div class="form-box" id="registerBox">
+<div class="close" onclick="closeForm()">✕</div>
+<form class="form" onsubmit="return registerSubmit(event)">
+<h3>Create Account</h3>
+
+<input type="text" id="name" placeholder="Full Name" oninput="lettersOnly(this)" required>
+<input type="text" id="phone" placeholder="Mobile Number" maxlength="10" oninput="numbersOnly(this)" required>
+<input type="email" id="email" placeholder="Email Address" required>
+<input type="password" id="password" placeholder="Password" required>
+
+<button class="submit" type="submit">Create Account</button>
+
+</form>
+</div>
+
+<script>
+
+/* OPEN FORMS */
+function openLogin(){
+document.getElementById("loginBox").style.display="flex";
+}
+function openRegister(){
+document.getElementById("registerBox").style.display="flex";
+}
+function closeForm(){
+document.getElementById("loginBox").style.display="none";
+document.getElementById("registerBox").style.display="none";
+}
+
+/* BACK HOME */
+function goHome(){
+window.location.href="index.html";
+}
+
+/* LOGIN */
+function loginSubmit(e){
+e.preventDefault();
+let user=document.getElementById("loginUser").value.trim();
+let pass=document.getElementById("loginPass").value.trim();
+
+if(user==="" || pass===""){
+alert("Please fill all login details");
+return false;
+}
+
+alert("Login Successful!");
+window.location.href="404.html";
+}
+
+/* REGISTER */
+function registerSubmit(e){
+e.preventDefault();
+let name=document.getElementById("name").value.trim();
+let phone=document.getElementById("phone").value.trim();
+let password=document.getElementById("password").value.trim();
+
+if(name.length<3){
+alert("Enter valid name");
+return false;
+}
+if(!/^[0-9]{10}$/.test(phone)){
+alert("Mobile number must be 10 digits");
+return false;
+}
+if(password.length<4){
+alert("Password must be minimum 4 characters");
+return false;
+}
+
+alert("Account Created Successfully!");
+window.location.href="404.html";
+}
+
+/* INPUT FILTERS */
+function lettersOnly(input){
+input.value=input.value.replace(/[^a-zA-Z ]/g,'');
+}
+function numbersOnly(input){
+input.value=input.value.replace(/[^0-9]/g,'');
+if(input.value.length>10){input.value=input.value.slice(0,10);}
+}
+
+</script>
+
+</body>
+</html>
